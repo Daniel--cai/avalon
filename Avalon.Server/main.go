@@ -1,10 +1,10 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/gin-gonic/gin"
 )
 
 type Article struct {
@@ -15,26 +15,72 @@ type Article struct {
 
 type Articles []Article
 
-func allArticles(w http.ResponseWriter, r *http.Request) {
+type Lobby struct {
+	LobbyID   string `json:"lobbyid"`
+	LobbyName string `json:"lobbyname"`
+}
 
+type Request struct {
+	ID string `json:"id"`
+}
+
+type Response struct {
+	Data string `json:"body"`
+}
+
+func getClient() string {
+	sess, err := session.NewSession(&aws.Config{
+		Region:   aws.String("us-west-2"),
+		Endpoint: aws.String("http://localhost:8080"),
+	})
+
+	// Create DynamoDB client
+	svc := dynamodb.New(sess)
+	if err != nil && svc != nil {
+		return "123"
+	}
+	return "144"
+}
+
+func allArticles(context *gin.Context) {
 	articles := Articles{
 		Article{Title: "Test Title", Desc: "Test desc", Content: "Hellow word"},
 	}
 
-	fmt.Println(w, "All Articles Endpoint Hit")
-	json.NewEncoder(w).Encode(articles)
+	// sess, err := session.NewSession(&aws.Config{
+	// 	Region:   aws.String("us-west-2"),
+	// 	Endpoint: aws.String("http://localhost:8080"),
+	// })
+
+	// svc := dynamodb.New(sess)
+
+	// getParams := &dynamodb.GetItemInput{
+	// 	TableName: aws.String("Lobby"),
+	// 	Key: map[string]*dynamodb.AttributeValue{
+	// 		"LobbyID": {
+	// 			S: aws.String("1"),
+	// 		},
+	// 	},
+	// }
+
+	// getItem, getErr := svc.GetItem(getParams)
+	// if getErr != nil {
+	// 	panic(getErr)
+	// }
+
+	context.JSON(200, articles)
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Homepage Endpoint Hitss")
-}
-
-func handleRequest() {
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/articles", allArticles)
-	log.Fatal(http.ListenAndServe(":8081", nil))
+func homePage(context *gin.Context) {
+	context.JSON(200, gin.H{
+		"message": "Hello Worlsd",
+	})
 }
 
 func main() {
-	handleRequest()
+	r := gin.Default()
+	r.GET("/", homePage)
+	r.GET("/articles", allArticles)
+	// http.ListenAndServe(":8081", r)
+	r.Run(":8081")
 }
