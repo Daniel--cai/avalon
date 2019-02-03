@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: avalon-server
+spec:
+  selector:
+    app: avalon-server
+  type: LoadBalancer
+  ports:
+    - port: 8081
+      protocol: TCP

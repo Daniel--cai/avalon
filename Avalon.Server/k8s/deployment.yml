@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avalon-server
+  labels:
+    app: avalon-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: avalon-server
+  template:
+    metadata:
+      labels:
+        app: avalon-server
+    spec:
+      containers:
+        - name: avalon-server
+          image: gcr.io/k8s-skaffold/avalon-server
+          ports:
+            - containerPort: 8081
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: avalon-server
+spec:
+  selector:
+    app: avalon-server
+  type: LoadBalancer
+  ports:
+    - port: 8081
+      protocol: TCP
