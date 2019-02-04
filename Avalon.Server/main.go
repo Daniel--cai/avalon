@@ -73,7 +73,7 @@ func allArticles(context *gin.Context) {
 
 func homePage(context *gin.Context) {
 	context.JSON(200, gin.H{
-		"message": "Hello Worlsd",
+		"message": "Hello Worlssd",
 	})
 }
 
@@ -81,6 +81,5 @@ func main() {
 	r := gin.Default()
 	r.GET("/", homePage)
 	r.GET("/articles", allArticles)
-	// http.ListenAndServe(":8081", r)
 	r.Run(":8081")
 }
