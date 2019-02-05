@@ -73,7 +73,7 @@ func allArticles(context *gin.Context) {
 
 func homePage(context *gin.Context) {
 	context.JSON(200, gin.H{
-		"message": "Hello Worlssd",
+		"message": "Hello Worlsddsssd",
 	})
 }
 

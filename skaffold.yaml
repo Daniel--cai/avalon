@@ -10,4 +10,4 @@ deploy:
   kubectl:
     manifests:
       - Avalon.Server/k8s/*
-      - Avalon.Dynamob
+      - Avalon.DynamoDb
