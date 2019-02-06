@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: avalon-server
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.org/websocket-services: "avalon-server"
+spec:
+  tls:
+    - hosts:
+        - foo.bar.com
+      secretName: secret
+  rules:
+    - host: foo.bar.com
+    - http:
+        paths:
+          - path: /
+            backend:
+              serviceName: avalon-server
+              servicePort: 80
+          - path: /ws
+            backend:
+              serviceName: avalon-server
+              servicePort: 80
