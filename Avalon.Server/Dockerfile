@@ -1,6 +1,6 @@
 FROM golang:1.11-alpine3.8  as builder
 
-RUN apk add --no-cache ca-certificates git 
+RUN apk add --update--no-cache ca-certificates git 
 
 ENV GO111MODULE auto
 ENV CGO_ENABLED 0

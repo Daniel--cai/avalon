@@ -24,3 +24,7 @@ spec:
             backend:
               serviceName: avalon-server
               servicePort: 80
+          - path: /home
+            backend:
+              serviceName: avalon-client
+              servicePort: 80

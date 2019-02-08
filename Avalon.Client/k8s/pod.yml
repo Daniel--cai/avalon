@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: avalon-client
+  labels:
+    app: avalon-client
+  spec:
+    containers:
+      - name: avalon-client
+        image: gcr.io/k8s-skaffold/avalon-client
+        ports:
+          - containerPort: 3000

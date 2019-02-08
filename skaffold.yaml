@@ -2,12 +2,18 @@ apiVersion: skaffold/v1beta4
 kind: Config
 build:
   artifacts:
+    - image: gcr.io/k8s-skaffold/avalon-client
+      context: ./Avalon.Client/
+      sync:
+        "*.js": .
     - image: gcr.io/k8s-skaffold/avalon-server
       context: ./Avalon.Server/
       sync:
         "*.go": .
+
 deploy:
   kubectl:
     manifests:
       - Avalon.Server/k8s/*
-      - Avalon.DynamoDb
+      # - Avalon.DynamoDb
+      - Avalon.Client/k8s/*
