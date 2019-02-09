@@ -12,6 +12,7 @@ spec:
       containers:
         - name: dynamodb
           image: amazon/dynamodb-local
+          # args: ["-jar", "DynamoDBLocal.jar", "-dbPath", /dynamodb_local_db"]
           env:
             - name: PORT
               value: "8000"
@@ -21,3 +22,11 @@ spec:
               memory: 100Mi
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: dynamodb
+              mountPath: /dynamodb_local_db
+      volumes:
+        - name: dynamodb
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate

@@ -11,25 +11,9 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-type Article struct {
-	Title   string `json:"Title"`
-	Desc    string `json:"desc"`
-	Content string `json:"content"`
-}
-
-type Articles []Article
-
 type Lobby struct {
 	LobbyID   string `json:"lobbyid"`
 	LobbyName string `json:"lobbyname"`
-}
-
-type Request struct {
-	ID string `json:"id"`
-}
-
-type Response struct {
-	Data string `json:"body"`
 }
 
 var wsupgrader = websocket.Upgrader{
@@ -38,18 +22,10 @@ var wsupgrader = websocket.Upgrader{
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
-func getClient() string {
-	sess, err := session.NewSession(&aws.Config{
-		Region:   aws.String("us-west-2"),
-		Endpoint: aws.String("http://localhost:8080"),
+func homePage(context *gin.Context) {
+	context.JSON(200, gin.H{
+		"message": "Hello Worlsdddsssd",
 	})
-
-	// Create DynamoDB client
-	svc := dynamodb.New(sess)
-	if err != nil && svc != nil {
-		return "123"
-	}
-	return "144"
 }
 
 func allArticles(context *gin.Context) {
@@ -57,34 +33,7 @@ func allArticles(context *gin.Context) {
 		Article{Title: "Test Title", Desc: "Test desc", Content: "Hellow word"},
 	}
 
-	// sess, err := session.NewSession(&aws.Config{
-	// 	Region:   aws.String("us-west-2"),
-	// 	Endpoint: aws.String("http://localhost:8080"),
-	// })
-
-	// svc := dynamodb.New(sess)
-
-	// getParams := &dynamodb.GetItemInput{
-	// 	TableName: aws.String("Lobby"),
-	// 	Key: map[string]*dynamodb.AttributeValue{
-	// 		"LobbyID": {
-	// 			S: aws.String("1"),
-	// 		},
-	// 	},
-	// }
-
-	// getItem, getErr := svc.GetItem(getParams)
-	// if getErr != nil {
-	// 	panic(getErr)
-	// }
-
 	context.JSON(200, articles)
-}
-
-func homePage(context *gin.Context) {
-	context.JSON(200, gin.H{
-		"message": "Hello Worlsdddsssd",
-	})
 }
 
 func wshandler(w http.ResponseWriter, r *http.Request) {
@@ -104,6 +53,13 @@ func wshandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	var db = dynamodb.New(session.New(),
+		aws.NewConfig().WithRegion("us-east-1").WithEndpoint("http://localhost:8000"))
+
+
+	_repository.NewDynamd
+
 	r := gin.Default()
 	r.GET("/ws", func(c *gin.Context) {
 		wshandler(c.Writer, c.Request)

@@ -1,5 +1,0 @@
-{
-  "scripts": {
-    "install-start": "npm install && npm start"
-  }
-}

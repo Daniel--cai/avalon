@@ -1,31 +1,21 @@
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: avalon-client
-#   labels:
-#     app: avalon-client
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: avalon-client
-#   template:
-#     metadata:
-#       labels:
-#         app: avalon-client
-#     spec:
-#       containers:
-#         - name: avalon-client
-#           image: gcr.io/k8s-skaffold/avalon-client
-#           # volumeMounts:
-#           #   - name: client
-#           #     mountPath: ../
-#           # resources:
-#           #   requests:
-#           #     cpu: 100m
-#           #     memory: 100Mi
-#           ports:
-#             - containerPort: 3000
-#       # volumes:
-#       #   - name: client
-#       #     emptyDir: {}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avalon-client
+  labels:
+    app: avalon-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: avalon-client
+  template:
+    metadata:
+      labels:
+        app: avalon-client
+    spec:
+      containers:
+        - name: avalon-client
+          image: gcr.io/k8s-skaffold/avalon-client
+          ports:
+            - containerPort: 3000
