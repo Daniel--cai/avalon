@@ -1,4 +1,4 @@
-package articles
+package model
 
 type Article struct {
 	Title   string `json:"Title"`
@@ -7,4 +7,3 @@ type Article struct {
 }
 
 type Articles []Article
-

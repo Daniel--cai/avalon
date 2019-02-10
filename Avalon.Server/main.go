@@ -2,19 +2,16 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"main/src/model"
+	"main/src/repository"
+
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
 )
-
-type Lobby struct {
-	LobbyID   string `json:"lobbyid"`
-	LobbyName string `json:"lobbyname"`
-}
 
 var wsupgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
@@ -29,11 +26,33 @@ func homePage(context *gin.Context) {
 }
 
 func allArticles(context *gin.Context) {
-	articles := Articles{
-		Article{Title: "Test Title", Desc: "Test desc", Content: "Hellow word"},
+	articles := model.Articles{
+		model.Article{Title: "Test Title", Desc: "Test desc", Content: "Hellow word"},
 	}
 
 	context.JSON(200, articles)
+}
+
+func getLobbies(context *gin.Context) {
+	repo, err := repository.LobbyRespository()
+	if err != nil {
+		panic(err)
+	}
+	code := context.Param("id")
+	if code == "" {
+		panic("Id is Null")
+	}
+	log.Println(code)
+	lobby, err := repo.GetLobby(code)
+	if err != nil {
+		panic(err)
+	}
+	if lobby == nil {
+		context.JSON(404, nil)
+	} else {
+		context.JSON(200, lobby)
+	}
+
 }
 
 func wshandler(w http.ResponseWriter, r *http.Request) {
@@ -52,13 +71,32 @@ func wshandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func newLobby(context *gin.Context) {
+	repo, err := repository.LobbyRespository()
+	if err != nil {
+		panic(err)
+	}
+
+	lobby := model.Lobby{
+		ID:      uuid.New().String(),
+		Code:    uuid.New().String()[0:4],
+		Players: []model.Player{},
+	}
+
+	err = repo.CreateLobby(&lobby)
+	if err != nil {
+		panic(err)
+	}
+
+	context.JSON(200, lobby.Code)
+}
+
+// func allLobbies(context *gin.Context) {
+// 	repo, _ := repository.LobbyRespository()
+// 	lobbies := repo.ListLobbies()
+// }
+
 func main() {
-
-	var db = dynamodb.New(session.New(),
-		aws.NewConfig().WithRegion("us-east-1").WithEndpoint("http://localhost:8000"))
-
-
-	_repository.NewDynamd
 
 	r := gin.Default()
 	r.GET("/ws", func(c *gin.Context) {
@@ -66,5 +104,7 @@ func main() {
 	})
 	r.GET("/", homePage)
 	r.GET("/articles", allArticles)
+	r.GET("/lobby/:id", getLobbies)
+	r.POST("/lobby", newLobby)
 	r.Run(":8081")
 }
