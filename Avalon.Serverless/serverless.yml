@@ -1,0 +1,96 @@
+service: avalon-serverless # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+  stage: dev
+  region: ${env:AWS_REGION}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "execute-api:ManageConnections"
+      Resource:
+        - "arn:aws:execute-api:*:*:**/@connections/*"
+    - Effect: Allow
+      Action:
+        - "dynamodb:PutItem"
+        - "dynamodb:GetItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        - "dynamodb:BatchGetItem"
+        - "dynamodb:BatchWriteItem"
+        - "dynamodb:Query"
+      Resource:
+        - Fn::GetAtt: [lobbyTable, Arn]
+        - Fn::Join:
+            - "/"
+            - - Fn::GetAtt: [lobbyTable, Arn]
+              - "*"
+
+websocketApiRouteSelectionExpression: $request.body.action
+
+functions:
+  createLobby:
+    handler: src/lib/lobby.createLobby
+    events:
+      - http:
+          path: users/create
+          method: get
+  connectionLobby:
+    handler: src/lib/lobby.connectionLobby
+    events:
+      - http:
+          path: connection
+          method: post
+      - websocket:
+          routeKey: $connect
+      - websocket:
+          routeKey: $disconnect
+
+resources:
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${env:DYNAMODB_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: code
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        GlobalSecondaryIndexes:
+          - IndexName: code
+            Projection:
+              ProjectionType: ALL
+            KeySchema:
+              - AttributeName: code
+                KeyType: HASH
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+
+custom:
+  webpack:
+    includeModules: true
+    packager: "npm"
+    package:
+      individually: true
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+
+plugins:
+  - serverless-websockets-plugin
+  - serverless-dynamodb-local
+  - serverless-webpack
+  - serverless-dotenv-plugin
+  - serverless-offline
