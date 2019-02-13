@@ -42,11 +42,7 @@ functions:
     events:
       - http:
           path: connection
-          method: post
-      - websocket:
-          routeKey: $connect
-      - websocket:
-          routeKey: $disconnect
+          method: get
 
 resources:
   Resources:
