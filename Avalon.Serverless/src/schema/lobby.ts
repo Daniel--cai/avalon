@@ -45,4 +45,7 @@ export class Lobby {
 
   @attribute({ memberType: embed(Mission) })
   rounds: Array<Mission>;
+
+  @attribute()
+  event: Array<Event>;
 }

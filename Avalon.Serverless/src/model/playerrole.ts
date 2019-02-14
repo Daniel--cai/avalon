@@ -1,4 +1,4 @@
-import { Player } from "../schema/player";
+import { Player } from "./player";
 import { Role } from "./role";
 
 export interface PlayerRole {

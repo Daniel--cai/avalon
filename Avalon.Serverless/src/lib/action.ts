@@ -4,50 +4,54 @@ import { PlayerRole } from "../model/playerrole";
 
 // select -> vote -> mission
 
-interface SelectMissionAction {
+export interface Message {
+  type: string;
+}
+
+export interface SelectMissionAction extends Message {
   player: Player;
   number: 0;
 }
 
-interface SelectMissionRequest {
+export interface SelectMissionRequest extends Message {
   player: Player[];
 }
 
-interface SelectMissionResponse {
+export interface SelectMissionResponse extends Message {
   players: Player[];
   counter: number;
 }
 
-interface VoteMissionAction {
+export interface VoteMissionAction extends Message {
   player: Player[];
 }
 
-interface VoteMissionRequest {
+export interface VoteMissionRequest extends Message {
   succeed: boolean;
 }
 
-interface VoteMissionResponse {
+export interface VoteMissionResponse extends Message {
   success: boolean;
 }
 
-interface SelectQuestAction {
+export interface SelectQuestAction extends Message {
   players: Player;
 }
 
-interface SelectQuestRequest {
+export interface SelectQuestRequest extends Message {
   players: Player[];
 }
 
-interface SelectQuestResponse {
+export interface SelectQuestResponse extends Message {
   player: Player;
   success: boolean;
 }
 
-interface SelectMerlinAction {
+export interface SelectMerlinAction extends Message {
   player: Player;
 }
 
-interface SelectMerlinResult {
+export interface SelectMerlinResult extends Message {
   success: boolean;
   players: Player[];
   playerRoles: PlayerRole[];
