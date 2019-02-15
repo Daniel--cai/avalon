@@ -1,16 +1,15 @@
 import { LobbyRepository } from "./client";
-import { Message } from "../lib/action";
 import * as AWS from "aws-sdk";
+import { Message } from "../message/message";
 
 export class Notification {
   private api: AWS.ApiGatewayManagementApi;
   private lobby: LobbyRepository;
 
-  constructor(event: any) {
+  constructor() {
     this.api = new AWS.ApiGatewayManagementApi({
       apiVersion: "2018-11-29",
-      endpoint:
-        event.requestContext.domainName + "/" + event.requestContext.stage
+      endpoint: process.env.ENDPOINT
     });
 
     this.lobby = new LobbyRepository();

@@ -1,9 +1,9 @@
 export enum Role {
-  Minion = 1,
-  Servant,
-  Mordred,
-  Morgana,
-  Merlin,
-  Oberon,
-  Assassin
+  Minion = "minion",
+  Servant = "servant",
+  Mordred = "mordred",
+  Morgana = "morgana",
+  Merlin = "merlin",
+  Oberon = "oberon",
+  Assassin = "assassin"
 }

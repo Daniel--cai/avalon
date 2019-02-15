@@ -1,6 +1,8 @@
 export enum GameState {
-  Waiting = 1,
-  Voting,
-  Quest,
-  GameOver
+  Setup = "setup",
+  Voting = "voting",
+  Quest = "quest",
+  Mission = "mission",
+  GameOver = "gameover",
+  Merlin = "merlin"
 }

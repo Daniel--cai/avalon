@@ -41,6 +41,9 @@ export class Lobby {
   players: Array<Player>;
 
   @attribute()
+  gameState: string;
+
+  @attribute()
   connectionId: Array<string>;
 
   @attribute({ memberType: embed(Mission) })

@@ -89,4 +89,5 @@ plugins:
   - serverless-dynamodb-local
   - serverless-webpack
   - serverless-dotenv-plugin
+  - serverless-step-functions
   - serverless-offline

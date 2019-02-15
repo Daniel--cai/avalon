@@ -3,6 +3,7 @@ import { DataMapper, ItemNotFoundException } from "@aws/dynamodb-data-mapper";
 import { DynamoDB } from "aws-sdk";
 import { Lobby } from "../schema/lobby";
 import { equals } from "@aws/dynamodb-expressions";
+import { GameState } from "../model/state";
 
 export class LobbyRepository {
   private mapper: DataMapper;
@@ -57,5 +58,13 @@ export class LobbyRepository {
       this.mapper.update(result);
     }
     return result;
+  }
+
+  async changeState(code: string, newState: GameState) {
+    const result = await this.getByCode(code);
+    if (result !== null) {
+      result.gameState = newState;
+      this.mapper.update(result);
+    }
   }
 }

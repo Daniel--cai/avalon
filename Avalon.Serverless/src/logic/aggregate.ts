@@ -11,6 +11,6 @@ export class Aggregate {
 
   public async Resolve(code: string) {
     const lobby = await this.repository.getByCode(code);
-    const gameState = lobby.
-    }
+    // const gameState = lobby.
+  }
 }
