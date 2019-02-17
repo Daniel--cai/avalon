@@ -4,6 +4,7 @@ import { DynamoDB } from "aws-sdk";
 import { Lobby } from "../schema/lobby";
 import { equals } from "@aws/dynamodb-expressions";
 import { GameState } from "../model/state";
+import { Mission } from "../schema/mission";
 
 export class LobbyRepository {
   private mapper: DataMapper;
@@ -19,6 +20,14 @@ export class LobbyRepository {
 
   async create(lobby: Lobby) {
     return this.mapper.put(lobby);
+  }
+
+  async put(lobby: Lobby) {
+    return this.mapper.update(lobby);
+  }
+
+  async update(lobby: Lobby) {
+    await this.mapper.update(lobby);
   }
 
   async getByCode(code: string) {
@@ -47,6 +56,12 @@ export class LobbyRepository {
     return lobby.connectionId;
   }
 
+  async createMission(code: string, mission: Mission) {
+    let lobby = await this.getByCode(code);
+    lobby.game.missions = [...lobby.game.missions, mission];
+    this.mapper.update(lobby);
+  }
+
   async disconnect(connectionId: string) {}
 
   async connect(code: string, connectionId: string) {
@@ -61,10 +76,10 @@ export class LobbyRepository {
   }
 
   async changeState(code: string, newState: GameState) {
-    const result = await this.getByCode(code);
-    if (result !== null) {
-      result.gameState = newState;
-      this.mapper.update(result);
+    const lobby = await this.getByCode(code);
+    if (lobby !== null) {
+      lobby.game.state = newState;
+      this.mapper.update(lobby);
     }
   }
 }

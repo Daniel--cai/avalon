@@ -7,24 +7,10 @@ import {
 } from "@aws/dynamodb-data-mapper-annotations";
 import { embed } from "@aws/dynamodb-data-mapper";
 import { Player } from "./player";
-import { Mission } from "./mission";
-
-export class Setup {
-  @attribute()
-  morgana: boolean;
-
-  @attribute()
-  merlin: boolean;
-
-  @attribute()
-  mordred: boolean;
-
-  @attribute()
-  oberon: boolean;
-
-  @attribute()
-  percival: boolean;
-}
+import { Setup } from "./setup";
+import { Game } from "./game";
+import moment = require("moment");
+import * as uuid from "uuid/v1";
 
 @table(process.env.DYNAMODB_TABLE)
 export class Lobby {
@@ -40,15 +26,30 @@ export class Lobby {
   @attribute({ memberType: embed(Player) })
   players: Array<Player>;
 
-  @attribute()
-  gameState: string;
+  @attribute({ memberType: embed(Setup) })
+  setup: Setup;
+
+  @attribute({ memberType: embed(Game) })
+  game: Game;
 
   @attribute()
   connectionId: Array<string>;
 
-  @attribute({ memberType: embed(Mission) })
-  rounds: Array<Mission>;
-
   @attribute()
   event: Array<Event>;
+
+  constructor() {
+    this.code = uuid()
+      .substring(0, 4)
+      .toUpperCase();
+    this.createdAt = moment(moment.now()).toDate();
+    this.game = new Game();
+    this.players = [];
+    this.setup = new Setup();
+    this.event = [];
+  }
+
+  getNumberOfPlayers() {
+    return this.players.length;
+  }
 }

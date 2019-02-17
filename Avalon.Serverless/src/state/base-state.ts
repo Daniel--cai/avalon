@@ -3,19 +3,21 @@ import { LobbyRepository } from "../shared/client";
 import { GameState } from "../model/state";
 import { Notification } from "../shared/notification";
 import { Command } from "../command/command";
-import { Message } from "../command/message";
+import { Message } from "../message/message";
 import { StateMachine } from "./state-machine";
 
 export class BaseState implements StateMachine {
-  private command: Command;
-  private aggregate: Lobby;
+  private code: string;
+  public aggregate: Lobby;
   private client: LobbyRepository;
   private notification: Notification;
+  private hydrated: boolean = false;
+  public type: GameState = GameState.GameOver;
 
-  constructor(command: Command) {
+  constructor(code: string) {
     this.client = new LobbyRepository();
     this.notification = new Notification();
-    this.command = command;
+    this.code = code;
   }
 
   //stub implementation
@@ -29,24 +31,23 @@ export class BaseState implements StateMachine {
     throw Error("shouldTransition not implemented");
   }
 
-  public async hydrateState() {
-    this.aggregate = await this.client.getByCode(this.command.code);
-  }
-
-  public getAggregate() {
-    return this.aggregate;
-  }
-
   public getRepository() {
     return this.client;
   }
 
+  public async hydrateState() {
+    if (!this.hydrateState) {
+      this.aggregate = await this.client.getByCode(this.code);
+      this.hydrated = true;
+    }
+  }
+
   public async changeState(stateFrom: GameState, stateTo: GameState) {
-    if (this.aggregate.gameState !== stateFrom) {
+    if (this.aggregate.game.state !== stateFrom) {
       throw Error(
         `Invalid transition from ${stateFrom} to ${stateTo} for Game ${
           this.aggregate.code
-        } when currently ${this.aggregate.gameState}`
+        } when currently ${this.aggregate.game.state}`
       );
     }
     await this.client.changeState(this.aggregate.code, stateTo);

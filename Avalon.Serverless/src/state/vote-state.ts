@@ -2,10 +2,13 @@ import { Player } from "../model/player";
 import { BaseState } from "./base-state";
 
 import { GameState } from "../model/state";
-import { CommandHandler } from "../command/command-handler";
 
 import { Command } from "../command/command";
 import { Message } from "../message/message";
+import { Lobby } from "../schema/lobby";
+import { Mission } from "../schema/mission";
+import { Nomination } from "../schema/nomination";
+import { GetNextNominator } from "../logic/game-logic";
 
 export interface VoteRequest {
   player: Player[];
@@ -15,30 +18,46 @@ export interface VoteCommand extends Command {
 }
 
 export interface VoteEventMessage extends Message {
-  players: Player[];
+  players: string[];
   counter: number;
 }
 
-export class VoteState extends BaseState implements CommandHandler {
-  public static Type: GameState = GameState.Voting;
+export class VoteState extends BaseState {
+  public Type: GameState = GameState.Voting;
 
-  constructor(command: Command) {
-    super(command);
+  constructor(code: string) {
+    super(code);
   }
-  onEnter() {}
+  async onEnter() {
+    const nomination = new Nomination();
+    nomination.nominator = GetNextNominator(this.aggregate.game);
+    this.aggregate.game.GetCurrentMission().nominations = [
+      ...this.aggregate.game.GetCurrentMission().nominations,
+      nomination
+    ];
+    this.getRepository().update(this.aggregate);
+  }
 
   async onTransition() {
-    //broadcast to people
+    const code = this.aggregate.code;
   }
 
-  async onReceiveCommand(command: Command) {
+  async transitionTo(newState: BaseState) {
     if (this.shouldTransition()) {
       this.onTransition();
-      this.changeState(VoteState.Type, VoteState.Type);
+      this.changeState(GameState.Voting, newState.type);
+      newState.onEnter();
     }
   }
 
   shouldTransition(): boolean {
-    if (this.getAggregate().gameState === null) return true;
+    const nomimation = this.aggregate.game
+      .GetCurrentMission()
+      .GetCurrentNomination();
+
+    if (nomimation.votes.length === this.aggregate.getNumberOfPlayers()) {
+      return true;
+    }
+    return false;
   }
 }

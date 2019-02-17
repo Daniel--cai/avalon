@@ -31,19 +31,24 @@ provider:
 websocketApiRouteSelectionExpression: $request.body.action
 
 functions:
-  createLobby:
-    handler: src/lib/lobby.createLobby
-    events:
-      - http:
-          path: users/create
-          method: get
   connectionLobby:
     handler: src/lib/lobby.connectionLobby
     events:
       - http:
           path: connection
           method: get
-
+  lobbyCreateCommand:
+    handler: src/lib/lobby-lambda.lobbyHandler
+    events:
+      - http:
+          path: lobby
+          method: post
+  voteCommand:
+    handler: src/lib/vote-lambda.voteHandler
+    events:
+      - http:
+          path: vote
+          method: post
 resources:
   Resources:
     usersTable:
