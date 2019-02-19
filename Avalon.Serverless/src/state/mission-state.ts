@@ -1,4 +1,5 @@
 import { Player } from "../model/player";
+import { BaseState } from "./base-state";
 
 export interface SelectMissionRequest {
   player: Player[];
@@ -9,9 +10,12 @@ export interface SelectMissionResponse {
   counter: number;
 }
 
-export class MissionEvent {
+export class MissionState extends BaseState {
   private state: any;
 
+  constructor(code: string) {
+    super(code);
+  }
   onEnter() {}
 
   shouldTransition(): boolean {

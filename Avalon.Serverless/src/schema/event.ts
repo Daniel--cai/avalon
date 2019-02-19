@@ -5,5 +5,5 @@ export class Event {
   type: string;
 
   @attribute()
-  payload: boolean;
+  payload: any;
 }

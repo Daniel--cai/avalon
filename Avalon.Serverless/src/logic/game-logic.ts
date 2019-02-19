@@ -12,6 +12,10 @@ export function IsDefaultVoteForMission(game: Game): boolean {
   return false;
 }
 
+export function IsCurrentNominationSuccess(game: Game): boolean {
+  return true;
+}
+
 export function IsCurrentMissionSuccess(game: Game): boolean {
   return true;
 }

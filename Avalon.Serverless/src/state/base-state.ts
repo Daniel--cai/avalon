@@ -5,6 +5,7 @@ import { Notification } from "../shared/notification";
 import { Command } from "../command/command";
 import { Message } from "../message/message";
 import { StateMachine } from "./state-machine";
+import { Event } from "../schema/event";
 
 export class BaseState implements StateMachine {
   private code: string;
@@ -55,5 +56,11 @@ export class BaseState implements StateMachine {
 
   public async broadcast(message: Message) {
     this.notification.broadcast(this.aggregate.code, message);
+    const event: Event = {
+      type: message.type.toString(),
+      payload: message
+    };
+    this.aggregate.events = [...this.aggregate.events, event];
+    this.client.update(this.aggregate);
   }
 }

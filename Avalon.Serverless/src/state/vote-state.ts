@@ -4,11 +4,10 @@ import { BaseState } from "./base-state";
 import { GameState } from "../model/state";
 
 import { Command } from "../command/command";
-import { Message } from "../message/message";
-import { Lobby } from "../schema/lobby";
-import { Mission } from "../schema/mission";
+import { VoteCountedMessage } from "../message/vote-message";
 import { Nomination } from "../schema/nomination";
 import { GetNextNominator } from "../logic/game-logic";
+import { Message } from "../message/message";
 
 export interface VoteRequest {
   player: Player[];
@@ -31,6 +30,7 @@ export class VoteState extends BaseState {
   async onEnter() {
     const nomination = new Nomination();
     nomination.nominator = GetNextNominator(this.aggregate.game);
+
     this.aggregate.game.GetCurrentMission().nominations = [
       ...this.aggregate.game.GetCurrentMission().nominations,
       nomination
@@ -40,6 +40,16 @@ export class VoteState extends BaseState {
 
   async onTransition() {
     const code = this.aggregate.code;
+    const message = new VoteCountedMessage();
+    message.success = true;
+    message.votes = this.aggregate.game
+      .GetCurrentMission()
+      .GetCurrentNomination().votes;
+    this.broadcast(message);
+    if (message.success) {
+    } else {
+      this.transitionTo(new VoteState(this.aggregate.code));
+    }
   }
 
   async transitionTo(newState: BaseState) {

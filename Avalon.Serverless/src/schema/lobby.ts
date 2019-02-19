@@ -11,6 +11,7 @@ import { Setup } from "./setup";
 import { Game } from "./game";
 import moment = require("moment");
 import * as uuid from "uuid/v1";
+import { Event } from "./event";
 
 @table(process.env.DYNAMODB_TABLE)
 export class Lobby {
@@ -36,7 +37,8 @@ export class Lobby {
   connectionId: Array<string>;
 
   @attribute()
-  event: Array<Event>;
+  @attribute({ memberType: embed(Event) })
+  events: Array<Event>;
 
   constructor() {
     this.code = uuid()
@@ -46,7 +48,7 @@ export class Lobby {
     this.game = new Game();
     this.players = [];
     this.setup = new Setup();
-    this.event = [];
+    this.events = [];
   }
 
   getNumberOfPlayers() {
