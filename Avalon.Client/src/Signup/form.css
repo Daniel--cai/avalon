@@ -1,0 +1,28 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    text-align: left;
+}
+
+.form-header {
+    display: inline-table;
+    margin-top: -32px;
+    padding: 0 5px;
+    text-align: center;
+    background: #f8fbfd;
+}
+
+.form-wrapper {
+    margin: 0 -30px;
+    padding: 20px 30px 30px;
+    border-radius: 4px;
+    border: 1px solid #e8e8fb;
+}
+
+#signup {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 30px 0;
+    transition: visibility 0s, opacity 0.5s linear 0.5s;
+}
