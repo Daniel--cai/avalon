@@ -17,5 +17,11 @@ export function IsCurrentNominationSuccess(game: Game): boolean {
 }
 
 export function IsCurrentMissionSuccess(game: Game): boolean {
-  return true;
+  const votes = game.GetCurrentMission().GetCurrentQuest();
+
+  let sucesses = 0;
+  votes.forEach(vote => {
+    if (vote.succeed) sucesses++;
+  });
+  return sucesses / votes.length > 0.5;
 }

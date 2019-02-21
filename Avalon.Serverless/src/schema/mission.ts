@@ -32,4 +32,8 @@ export class Mission {
   GetCurrentNomination() {
     return this.nominations[this.nominations.length - 1];
   }
+
+  GetCurrentQuest() {
+    return this.quest;
+  }
 }

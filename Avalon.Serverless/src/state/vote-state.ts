@@ -8,6 +8,7 @@ import { VoteCountedMessage } from "../message/vote-message";
 import { Nomination } from "../schema/nomination";
 import { GetNextNominator } from "../logic/game-logic";
 import { Message } from "../message/message";
+import { MissionState } from "./mission-state";
 
 export interface VoteRequest {
   player: Player[];
@@ -47,6 +48,7 @@ export class VoteState extends BaseState {
       .GetCurrentNomination().votes;
     this.broadcast(message);
     if (message.success) {
+      this.transitionTo(new MissionState(this.aggregate.code));
     } else {
       this.transitionTo(new VoteState(this.aggregate.code));
     }
