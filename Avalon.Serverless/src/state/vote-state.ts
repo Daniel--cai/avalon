@@ -10,18 +10,6 @@ import { GetNextNominator } from "../logic/game-logic";
 import { Message } from "../message/message";
 import { MissionState } from "./mission-state";
 
-export interface VoteRequest {
-  player: Player[];
-}
-export interface VoteCommand extends Command {
-  success: boolean;
-}
-
-export interface VoteEventMessage extends Message {
-  players: string[];
-  counter: number;
-}
-
 export class VoteState extends BaseState {
   public Type: GameState = GameState.Voting;
 

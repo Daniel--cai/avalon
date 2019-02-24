@@ -2,9 +2,8 @@ import { LobbyRepository } from "../shared/client";
 import { MissionState } from "../state/mission-state";
 import { VoteState } from "../state/vote-state";
 import { IsCurrentNominationSuccess } from "../logic/game-logic";
-import { LobbyState } from "../state/lobby-state";
 
-export class GameCommand {
+export class VoteCommand {
   private client: LobbyRepository;
 
   constructor() {

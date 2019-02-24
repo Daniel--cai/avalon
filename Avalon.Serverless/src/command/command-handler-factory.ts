@@ -1,5 +1,4 @@
 import { VoteState } from "../state/vote-state";
-import { MissionEvent } from "../state/mission-state";
 import { Command } from "./command";
 import { QuestEvent } from "../state/quest-state";
 type StateType = VoteState;

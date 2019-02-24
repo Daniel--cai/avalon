@@ -1,6 +1,7 @@
 import { Player } from "../model/player";
 import { BaseState } from "./base-state";
 import { GameState } from "../model/state";
+import { Game } from "../schema/game";
 
 export interface SelectMissionRequest {
   player: Player[];
@@ -20,14 +21,8 @@ export class MissionState extends BaseState {
   onEnter() {}
 
   shouldTransition(): boolean {
-    const nomimation = this.aggregate.game
-      .GetCurrentMission()
-      .GetCurrentNomination();
-
-    if (nomimation.votes.length === this.aggregate.getNumberOfPlayers()) {
-      return true;
-    }
-    return false;
+    const mission = this.aggregate.game.GetCurrentMission();
+    return mission.GetCurrentQuest().length >= mission.quantity;
   }
 
   async transitionTo(newState: BaseState) {

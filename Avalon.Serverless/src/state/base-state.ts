@@ -37,9 +37,12 @@ export class BaseState implements StateMachine {
   }
 
   public async hydrateState() {
-    if (!this.hydrateState) {
+    console.log(`to hydrate state ${!this.hydrated}`);
+    if (!this.hydrated) {
       this.aggregate = await this.client.getByCode(this.code);
+
       this.hydrated = true;
+      console.log(`hydrated state code ${this.code}`);
     }
   }
 

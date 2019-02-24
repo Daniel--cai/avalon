@@ -1,10 +1,13 @@
 import { Handler } from "aws-lambda";
 import { LobbyRepository } from "../shared/client";
 import { Lobby } from "../schema/lobby";
-import { VoteState, VoteCommand } from "../state/vote-state";
+import { VoteState } from "../state/vote-state";
+import { VoteCommand } from "../command/vote-commands";
 
 export const voteHandler: Handler = async (event, context) => {
-  const command: VoteCommand = null;
+  const command = new VoteCommand();
+  const { code, player, success } = event.body;
+  command.receiveVote(code, player, success);
   const handler = new VoteState(event.body);
 
   handler.onEnter();
@@ -12,9 +15,9 @@ export const voteHandler: Handler = async (event, context) => {
   if (handler.shouldTransition()) {
     handler.onTransition();
   }
-  const success = {
+  const ok = {
     statusCode: 200,
     body: JSON.stringify(event.body)
   };
-  return success;
+  return ok;
 };

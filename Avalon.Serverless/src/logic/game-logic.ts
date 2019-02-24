@@ -25,3 +25,11 @@ export function IsCurrentMissionSuccess(game: Game): boolean {
   });
   return sucesses / votes.length > 0.5;
 }
+
+export function IsGameFinished(game: Game): boolean {
+  return false;
+}
+
+export function IsMerlin(game: Game): boolean {
+  return false;
+}

@@ -18,6 +18,7 @@ export class GameCommand {
     const lobbyState = new LobbyState(code);
     const setupState = new SetupState(code);
     lobbyState.hydrateState();
+    setupState.hydrateState();
     lobbyState.transitionTo(setupState);
   }
 }
