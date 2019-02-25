@@ -1,10 +1,8 @@
 import { Handler } from "aws-lambda";
-import { LobbyRepository } from "../shared/client";
-import { Lobby } from "../schema/lobby";
-import { VoteState } from "../state/vote-state";
-import { VoteCommand } from "../command/vote-commands";
 
-export const voteHandler: Handler = async (event, context) => {
+import { GameCommand } from "../../command/game-command";
+
+export const voteQueue: Handler = async (event, context) => {
   const command = new VoteCommand();
   const { code, player, success } = event.body;
   command.receiveVote(code, player, success);
