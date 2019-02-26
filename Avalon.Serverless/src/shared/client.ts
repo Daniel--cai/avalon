@@ -31,12 +31,6 @@ export class LobbyRepository {
   }
 
   async getByCode(code: string) {
-    const mapper = new DataMapper({
-      client: new DynamoDB({
-        region: "us-west-2",
-        endpoint: "http://localhost:8000"
-      })
-    });
     let result: Lobby = null;
     const lobbies = this.mapper.scan(Lobby, {
       filter: {

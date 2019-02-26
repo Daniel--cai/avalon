@@ -9,6 +9,7 @@ export class Nomination {
   @attribute()
   nominees: string[];
 
+  @attribute()
   nominator: string;
 
   constructor() {

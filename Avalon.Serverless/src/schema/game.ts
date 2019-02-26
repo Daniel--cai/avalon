@@ -15,6 +15,7 @@ export class Game {
   }
 
   GetCurrentMission() {
+    console.log(this.missions);
     return this.missions[this.missions.length - 1];
   }
 }

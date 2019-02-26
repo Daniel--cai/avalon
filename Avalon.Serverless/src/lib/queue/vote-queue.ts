@@ -1,6 +1,7 @@
 import { Handler } from "aws-lambda";
 
-import { GameCommand } from "../../command/game-command";
+import { VoteCommand } from "../../command/vote-commands";
+import { VoteState } from "../../state/vote-state";
 
 export const voteQueue: Handler = async (event, context) => {
   const command = new VoteCommand();

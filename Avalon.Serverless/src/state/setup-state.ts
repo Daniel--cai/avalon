@@ -21,25 +21,27 @@ export class SetupState extends BaseState {
     super(code);
   }
   async onEnter() {
+    console.log("setupState");
     const nominator = GetNextNominator(this.aggregate.game);
 
     const nomination = new Nomination();
     {
       nomination.nominator = nominator;
     }
-
+    console.log("setup onEnter");
     this.aggregate.game.GetCurrentMission().nominations = [
       ...this.aggregate.game.GetCurrentMission().nominations,
       nomination
     ];
     await this.getRepository().update(this.aggregate);
 
+    console.log("sending SetupNominateMessage");
     const message = new SetupNominateMessage();
     {
       message.player = nominator;
       message.quantity = this.aggregate.game.GetCurrentMission().quantity;
     }
-
+    console.log(message);
     await this.broadcast(message);
   }
 

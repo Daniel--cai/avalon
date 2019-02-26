@@ -16,15 +16,23 @@ export class Notification {
   }
 
   broadcast = async (code: string, message: Message) => {
-    const connections = await this.lobby.getConnections(code);
+    const connections = (await this.lobby.getConnections(code)) || [];
+    const { type, ...body } = message;
+
     const payload = {
-      action: message.type,
-      payload: message
+      action: message.type.toString(),
+      payload: { ...body, type: type.toString() }
     };
-    for await (const connectionId of connections) {
+    console.log("ready for payload");
+    console.log(connections);
+    connections.push("sgsdg");
+    const sent = connections.map(async connectionId => {
       try {
         await this.api
-          .postToConnection({ ConnectionId: connectionId, Data: payload })
+          .postToConnection({
+            ConnectionId: connectionId,
+            Data: JSON.stringify(payload)
+          })
           .promise();
       } catch (e) {
         if (e.statusCode === 410) {
@@ -33,7 +41,8 @@ export class Notification {
           throw e;
         }
       }
-    }
+    });
+    await Promise.all(sent);
   };
 
   send = async (connectionId: string, message: Message) => {

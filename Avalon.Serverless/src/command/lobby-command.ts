@@ -21,11 +21,38 @@ export class LobbyCommand {
     return lobby.code;
   }
 
+  async getPlayers(code: string) {
+    const lobby = await this.client.getByCode(code);
+    return lobby.players;
+  }
+
   async joinLobby(code: string, player: Player) {
     const setup = new LobbyState(code);
+    await setup.hydrateState();
+    console.log("hydrated");
     const message = new LobbyJoinMessage();
     message.player = player.name;
+    const lobby = setup.aggregate;
+    const playerModel = new Player();
+    playerModel.name = player.name;
+    playerModel.number = 1;
+    playerModel.connectionId = "thlkjslf";
+    lobby.players.push(playerModel);
+    this.client.update(lobby);
 
-    await setup.onReceiveMessage(message);
+    await setup.broadcast(message);
   }
 }
+
+// const voteState = new VoteState(code);
+// voteState.hydrateState();
+// const missionState = new MissionState(code);
+// if (
+//   voteState.shouldTransition() &&
+//   IsCurrentNominationSuccess(voteState.aggregate.game)
+// ) {
+//   missionState.hydrateState();
+//   voteState.transitionTo(missionState);
+// } else {
+//   voteState.transitionTo(voteState);
+// }

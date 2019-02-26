@@ -37,25 +37,37 @@ websocketApiRouteSelectionExpression: $request.body.action
 
 functions:
   connectionLobby:
-    handler: src/lib/lobby.connectionLobby
+    handler: src/lib/lambda/lobby.connectionLobby
     events:
       - http:
           path: connection
           method: get
   lobbyCreateCommand:
-    handler: src/lib/lobby-lambda.lobbyHandler
+    handler: src/lib/lambda/lobby-lambda.lobbyCreateHandler
     events:
       - http:
           path: lobby
           method: post
   lobbyStartCommand:
-    handler: src/lib/game-lambda.gameHandler
+    handler: src/lib/lambda/game-lambda.gameHandler
     events:
       - http:
           path: game
           method: post
+  lobbyJoinCommand:
+    handler: src/lib/lambda/lobby-lambda.lobbyJoinHandler
+    events:
+      - http:
+          path: lobby/join
+          method: post
+  lobbyPlayersQuery:
+    handler: src/lib/lambda/lobby-lambda.getPlayers
+    events:
+      - http:
+          path: lobby/{code}/players
+          method: get
   voteCommand:
-    handler: src/lib/vote-lambda.voteHandler
+    handler: src/lib/lambda/vote-lambda.voteHandler
     events:
       - http:
           path: vote
@@ -78,24 +90,12 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: code
-            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
-        GlobalSecondaryIndexes:
-          - IndexName: code
-            Projection:
-              ProjectionType: ALL
-            KeySchema:
-              - AttributeName: code
-                KeyType: HASH
-            ProvisionedThroughput:
-              ReadCapacityUnits: 5
-              WriteCapacityUnits: 5
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 custom:
   myTopic:
@@ -124,6 +124,4 @@ plugins:
   - serverless-webpack
   - serverless-dotenv-plugin
   - serverless-step-functions
-  - serverless-offline-sqs
-  - serverless-offline-sns
   - serverless-offline

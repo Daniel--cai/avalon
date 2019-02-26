@@ -36,14 +36,16 @@ export class BaseState implements StateMachine {
     return this.client;
   }
 
-  public async hydrateState() {
-    console.log(`to hydrate state ${!this.hydrated}`);
-    if (!this.hydrated) {
+  public async hydrateState(aggregate: Lobby = null) {
+    if (this.hydrated === true) return;
+    if (aggregate === null) {
+      console.log("hydrating from new");
       this.aggregate = await this.client.getByCode(this.code);
-
-      this.hydrated = true;
-      console.log(`hydrated state code ${this.code}`);
+    } else {
+      console.log("hydrating from existing");
+      this.aggregate = aggregate;
     }
+    this.hydrated = true;
   }
 
   public async changeState(stateFrom: GameState, stateTo: GameState) {
@@ -58,7 +60,7 @@ export class BaseState implements StateMachine {
   }
 
   public async broadcast(message: Message) {
-    this.notification.broadcast(this.aggregate.code, message);
+    //this.notification.broadcast(this.aggregate.code, message);
     const event: Event = {
       type: message.type.toString(),
       payload: message

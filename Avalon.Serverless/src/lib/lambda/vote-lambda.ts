@@ -10,10 +10,10 @@ export const voteHandler: Handler = async (event, context) => {
   command.receiveVote(code, player, success);
   const handler = new VoteState(event.body);
 
-  handler.onEnter();
+  await handler.onEnter();
 
   if (handler.shouldTransition()) {
-    handler.onTransition();
+    await handler.onTransition();
   }
   const ok = {
     statusCode: 200,

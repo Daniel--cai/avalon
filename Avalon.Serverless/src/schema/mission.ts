@@ -22,10 +22,9 @@ export class Mission {
 
   constructor() {
     this.success = null;
-
     this.nominations = [];
     this.quest = [];
-    this.round = 0;
+    this.round = 1;
     this.quantity = 0;
   }
 

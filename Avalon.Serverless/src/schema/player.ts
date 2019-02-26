@@ -9,8 +9,5 @@ export class Player {
   name: string;
 
   @attribute()
-  role: number;
-
-  @attribute()
   number: number;
 }

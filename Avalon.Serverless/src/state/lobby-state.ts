@@ -19,22 +19,26 @@ export class LobbyState extends BaseState {
     this.aggregate.game.missions = [...this.aggregate.game.missions, mission];
     mission.quantity = GetNextMissionQuantity(this.aggregate.game);
     await this.getRepository().update(this.aggregate);
+    console.log("lobby onTransition");
+    console.log(this.aggregate.game.missions);
   }
 
-  async onReceiveMessage(message: Message) {
-    this.broadcast(message);
-  }
+  async onReceiveMessage(message: Message) {}
 
   async transitionTo(newState: BaseState) {
     if (this.shouldTransition()) {
-      this.onTransition();
-      this.changeState(GameState.Lobby, newState.type);
-      newState.onEnter();
+      console.log(`transition from lobby to ${newState.type}`);
+      await this.onTransition();
+      await this.changeState(GameState.Lobby, newState.type);
+      console.log(this.aggregate);
+      await newState.hydrateState(this.aggregate);
+      await newState.onEnter();
     }
   }
 
   shouldTransition(): boolean {
-    if (this.aggregate.game.state === null) return true;
-    return false;
+    // if (this.aggregate.game.state === null) return true;
+    // return false;
+    return true;
   }
 }
