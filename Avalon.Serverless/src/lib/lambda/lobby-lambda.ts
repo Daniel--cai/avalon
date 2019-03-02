@@ -69,5 +69,14 @@ export const connectionLobby: Handler = async (event, context) => {
   } else if (event.requestContext.eventType === "DISCONNECT") {
     console.log("conection disconnected!");
   }
-  return success;
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: "Go Serverless v1.0! Your function executed successfully!",
+      input: event,
+      context: context
+    })
+  };
+
+  return response;
 };

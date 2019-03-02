@@ -37,7 +37,7 @@ websocketApiRouteSelectionExpression: $request.body.action
 
 functions:
   connectionLobby:
-    handler: src/lib/lambda/lobby.connectionLobby
+    handler: src/lib/lambda/lobby-lambda.connectionLobby
     events:
       - http:
           path: connection
