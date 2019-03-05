@@ -8,3 +8,12 @@ services:
       - "8000:8000"
     volumes:
       - "/avalon/DynamoDB/data:/data"
+
+  vault:
+    image: "vault"
+    ports:
+      - "8200:8200"
+    volumes:
+      - "/Vault/logs:/logs"
+    environment:
+      VAULT_DEV_TOKEN: "dev"
