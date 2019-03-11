@@ -1,31 +1,51 @@
 import React, { Component } from "react";
-import Signup from "./signup";
-import axios from "axios";
+
+import { RouteComponentProps, withRouter } from "react-router-dom";
+
 import Api from "../framework/api";
+import "./Form.css";
 
 interface State {
   name: string;
   code: string;
 }
 
-class Form extends React.Component<any, State> {
+interface Props {}
+
+class FormBase extends React.Component<Props & RouteComponentProps, State> {
   state = {
     name: "",
     code: ""
   };
 
-  handleClick = async () => {
+  handleCreate = async () => {
+    const data = {};
+    const response = await Api.Post("/lobby", data);
+    const code = response.data;
+    await this.joinGame(code);
+  };
+
+  joinGame = async (code: string) => {
     const data = {
-      code: this.state.code,
+      code: code,
       player: {
         name: this.state.name
       }
     };
     const response = await Api.Post("/lobby/join", data);
+    console.log("joined game: " + code);
+    this.props.history.push(`/lobby/${code}`);
     const connectionId = response.data;
+  };
+
+  handleClick = async () => {
+    await this.joinGame(this.state.code);
   };
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ ...this.state, [event.target.name]: event.target.value });
+  };
+  isJoinDisabled = () => {
+    return this.state.name.trim() === "";
   };
   render() {
     return (
@@ -36,7 +56,7 @@ class Form extends React.Component<any, State> {
             <input
               name="name"
               className="field"
-              placeholder="Jenny Rosen"
+              placeholder="Bob Smith"
               value={this.state.name}
               onChange={this.handleChange}
             />
@@ -48,20 +68,20 @@ class Form extends React.Component<any, State> {
               type="Code"
               className="field"
               value={this.state.code}
-              placeholder="jenny@example.com"
+              placeholder="bob@example.com"
               onChange={this.handleChange}
             />
           </label>
         </div>
         <div className="fieldset">
-          <button onClick={this.handleClick} disabled>
+          <button onClick={this.handleClick} disabled={this.isJoinDisabled()}>
             Join
           </button>
-          <button>Create</button>
+          <button onClick={this.handleCreate}>Create</button>
         </div>
       </React.Fragment>
     );
   }
 }
 
-export default Form;
+export const Form = withRouter(FormBase);

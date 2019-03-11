@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
-import Signup from "./Signup/Signup";
+import { Signup } from "./signup";
+
+import { Lobby } from "./lobby";
 
 interface State {
   output: string[];
@@ -55,9 +58,12 @@ class App extends Component<any, State> {
 
   render() {
     return (
-      <div className="App">
-        <Signup />
-      </div>
+      <Router>
+        <div className="App">
+          <Route exact path="/" component={Signup} />
+          <Route exact path="/lobby/:code" component={Lobby} />
+        </div>
+      </Router>
     );
   }
 }

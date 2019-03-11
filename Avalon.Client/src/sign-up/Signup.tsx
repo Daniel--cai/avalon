@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import Form from "./Form";
-import "./form.css";
+import { Form } from "./Form";
 interface State {
   name: string;
   code: string;
 }
 
-class Signup extends Component<any, State> {
+export class Signup extends Component<any, State> {
   state = {
     name: "",
     code: ""
@@ -22,5 +21,3 @@ class Signup extends Component<any, State> {
     );
   }
 }
-
-export default Signup;
