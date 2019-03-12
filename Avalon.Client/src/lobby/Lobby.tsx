@@ -33,6 +33,20 @@ export class Lobby extends React.Component<
     this.setState({ players: players.data });
   }
 
+  handleClick = async () => {
+    console.log("onClick");
+    const data = {
+      code: this.props.match.params.code
+    };
+    try {
+      const response = await Api.Post("/game", data);
+      const game = response.data;
+      console.log(response.data);
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
   render() {
     return (
       <div>
@@ -40,6 +54,7 @@ export class Lobby extends React.Component<
         {this.state.players.map((player, index) => {
           return <div key={index}>{player.name}</div>;
         })}
+        <button onClick={this.handleClick}>Start</button>
       </div>
     );
   }

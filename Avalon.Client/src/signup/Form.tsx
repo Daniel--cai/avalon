@@ -8,6 +8,7 @@ import "./Form.css";
 interface State {
   name: string;
   code: string;
+  error: string;
 }
 
 interface Props {}
@@ -15,7 +16,8 @@ interface Props {}
 class FormBase extends React.Component<Props & RouteComponentProps, State> {
   state = {
     name: "",
-    code: ""
+    code: "",
+    error: ""
   };
 
   handleCreate = async () => {
@@ -32,10 +34,14 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
         name: this.state.name
       }
     };
-    const response = await Api.Post("/lobby/join", data);
-    console.log("joined game: " + code);
-    this.props.history.push(`/lobby/${code}`);
-    const connectionId = response.data;
+    try {
+      const response = await Api.Post("/lobby/join", data);
+      const code = response.data;
+      this.props.history.push(`/lobby/${code}`);
+      const connectionId = response.data;
+    } catch (error) {
+      this.setState({ error: error.response.data });
+    }
   };
 
   handleClick = async () => {
@@ -68,17 +74,23 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
               type="Code"
               className="field"
               value={this.state.code}
+              maxLength={4}
               placeholder="bob@example.com"
               onChange={this.handleChange}
             />
           </label>
         </div>
         <div className="fieldset">
-          <button onClick={this.handleClick} disabled={this.isJoinDisabled()}>
-            Join
-          </button>
-          <button onClick={this.handleCreate}>Create</button>
+          {this.state.code === "" && (
+            <button onClick={this.handleCreate}>Create</button>
+          )}
+          {this.state.code !== "" && (
+            <button onClick={this.handleClick} disabled={this.isJoinDisabled()}>
+              Join
+            </button>
+          )}
         </div>
+        <div>{this.state.error}</div>
       </React.Fragment>
     );
   }

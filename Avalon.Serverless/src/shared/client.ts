@@ -5,6 +5,7 @@ import { Lobby } from "../schema/lobby";
 import { equals } from "@aws/dynamodb-expressions";
 import { GameState } from "../model/state";
 import { Mission } from "../schema/mission";
+import { NotFoundError } from "../error/not-found-error";
 
 export class LobbyRepository {
   private mapper: DataMapper;
@@ -41,7 +42,8 @@ export class LobbyRepository {
     for await (const lobby of lobbies) {
       result = lobby;
     }
-    if (result === null) throw new Error(`Cannot find lobby ${code}`);
+
+    if (result === null) throw new NotFoundError(`Cannot find lobby ${code}`);
     return result;
   }
 
