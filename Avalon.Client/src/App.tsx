@@ -5,6 +5,7 @@ import "./App.css";
 import { Signup } from "./signup";
 
 import { Lobby } from "./lobby";
+import { GameBoard } from "./components/game-board";
 
 interface State {
   output: string[];
@@ -62,6 +63,7 @@ class App extends Component<any, State> {
         <div className="App">
           <Route exact path="/" component={Signup} />
           <Route exact path="/lobby/:code" component={Lobby} />
+          <Route exact path="/game/:code" component={GameBoard} />
         </div>
       </Router>
     );
