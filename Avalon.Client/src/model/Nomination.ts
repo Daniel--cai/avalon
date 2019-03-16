@@ -1,7 +1,7 @@
 import { Vote } from "./Vote";
 
-export class Nomination {
-  votes: Array<Vote>;
+export interface Nomination {
+  votes: Vote[];
   nominees: string[];
   nominator: string;
 }

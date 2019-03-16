@@ -16,3 +16,20 @@ export const gameHandler: Handler = async (event, context) => {
   };
   return success;
 };
+
+export const gameGetHandler: Handler = async (event, context) => {
+  const gameQuery = new GameQuery();
+  const code = event.pathParameters.code;
+
+  try {
+    const gameState = await gameQuery.getGame(code);
+    console.log(gameState);
+    const success = {
+      statusCode: 200,
+      body: JSON.stringify(gameState)
+    };
+    return success;
+  } catch (ex) {
+    console.log(ex);
+  }
+};

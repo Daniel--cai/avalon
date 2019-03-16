@@ -60,6 +60,12 @@ functions:
       - http:
           path: lobby/join
           method: post
+  gameGetQuery:
+    handler: src/lib/lambda/game-lambda.gameGetHandler
+    events:
+      - http:
+          path: game/{code}
+          method: get
   lobbyPlayersQuery:
     handler: src/lib/lambda/lobby-lambda.getPlayers
     events:

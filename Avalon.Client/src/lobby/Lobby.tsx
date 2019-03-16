@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import Api from "../framework/api";
-
+import { Game } from "../model/Game";
 interface Player {
   connectionId: string;
   name: string;
@@ -40,7 +40,8 @@ export class Lobby extends React.Component<
     };
     try {
       const response = await Api.Post("/game", data);
-      const game = response.data;
+      const game: Game = response.data;
+      this.props.history.push(`/game/${this.props.match.params.code}`);
       console.log(response.data);
     } catch (ex) {
       console.log(ex);

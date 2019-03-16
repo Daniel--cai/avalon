@@ -1,6 +1,6 @@
 import { Mission } from "./Mission";
 
-export class Game {
+export interface Game {
   missions: Mission[];
   state: string;
 }

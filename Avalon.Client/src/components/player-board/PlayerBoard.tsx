@@ -1,5 +1,8 @@
 import React, { Component } from "react";
-export class PlayerBoard extends Component {
+
+interface Props {}
+
+export class PlayerBoard extends Component<Props, any> {
   render() {
     return <div />;
   }

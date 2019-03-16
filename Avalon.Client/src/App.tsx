@@ -5,7 +5,7 @@ import "./App.css";
 import { Signup } from "./signup";
 
 import { Lobby } from "./lobby";
-import { GameBoard } from "./components/game-board";
+import { GameScreen } from "./pages/game-screen";
 
 interface State {
   output: string[];
@@ -16,46 +16,46 @@ class App extends Component<any, State> {
   constructor(props: any) {
     super(props);
 
-    const websocket: WebSocket = new WebSocket(
-      process.env.REACT_APP_SERVER_URL
-    );
+    // const websocket: WebSocket = new WebSocket(
+    //   process.env.REACT_APP_SERVER_URL
+    // );
 
-    this.state = {
-      output: [],
-      websocket: websocket
-    };
+    // this.state = {
+    //   output: [],
+    //   websocket: websocket
+    // };
   }
 
-  componentDidMount() {
-    this.state.websocket.onmessage = this.onMessage;
-    this.state.websocket.onopen = this.onOpen;
-  }
+  // componentDidMount() {
+  //   this.state.websocket.onmessage = this.onMessage;
+  //   this.state.websocket.onopen = this.onOpen;
+  // }
 
-  onMessage = (msg: MessageEvent): any => {
-    const date = new Date() + " <== " + msg.data + "\n";
-    const output = [...this.state.output, date];
-    this.setState({ output: output });
-    console.log(msg);
-  };
+  // onMessage = (msg: MessageEvent): any => {
+  //   const date = new Date() + " <== " + msg.data + "\n";
+  //   const output = [...this.state.output, date];
+  //   this.setState({ output: output });
+  //   console.log(msg);
+  // };
 
-  sendMessage = (msg: any) => {
-    const date = new Date() + " <== " + msg.data + "\n";
-    const output = [...this.state.output, date];
-    this.setState({ output: output });
-    this.state.websocket.send(msg);
-  };
+  // sendMessage = (msg: any) => {
+  //   const date = new Date() + " <== " + msg.data + "\n";
+  //   const output = [...this.state.output, date];
+  //   this.setState({ output: output });
+  //   this.state.websocket.send(msg);
+  // };
 
-  onOpen = (msg: Event) => {
-    setInterval(() => {
-      this.sendMessage("ping");
-    }, 1000);
-  };
+  // onOpen = (msg: Event) => {
+  //   setInterval(() => {
+  //     this.sendMessage("ping");
+  //   }, 1000);
+  // };
 
-  renderMessage() {
-    return this.state.output.map(output => {
-      return <p>{output}</p>;
-    });
-  }
+  // renderMessage() {
+  //   return this.state.output.map(output => {
+  //     return <p>{output}</p>;
+  //   });
+  // }
 
   render() {
     return (
@@ -63,7 +63,7 @@ class App extends Component<any, State> {
         <div className="App">
           <Route exact path="/" component={Signup} />
           <Route exact path="/lobby/:code" component={Lobby} />
-          <Route exact path="/game/:code" component={GameBoard} />
+          <Route exact path="/game/:code" component={GameScreen} />
         </div>
       </Router>
     );
