@@ -18,6 +18,8 @@ export class VoteState extends BaseState {
   }
   async onEnter() {
     const nomination = new Nomination();
+    console.log("onEnter");
+    console.log(this.aggregate);
     nomination.nominator = GetNextNominator(this.aggregate.game);
 
     this.aggregate.game.GetCurrentMission().nominations = [
@@ -44,7 +46,7 @@ export class VoteState extends BaseState {
 
   async transitionTo(newState: BaseState) {
     if (this.shouldTransition()) {
-      this.onTransition();
+      //this.onTransition();
       this.changeState(GameState.Voting, newState.type);
       newState.onEnter();
     }
@@ -55,7 +57,7 @@ export class VoteState extends BaseState {
       .GetCurrentMission()
       .GetCurrentNomination();
 
-    if (nomimation.votes.length === this.aggregate.getNumberOfPlayers()) {
+    if (nomimation.votes.length >= this.aggregate.getNumberOfPlayers()) {
       return true;
     }
     return false;

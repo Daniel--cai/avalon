@@ -26,33 +26,21 @@ export class LobbyCommand {
     return lobby.players;
   }
 
-  async joinLobby(code: string, player: Player) {
+  async joinLobby(code: string, player: string) {
     const setup = new LobbyState(code);
     await setup.hydrateState();
     console.log("hydrated");
     const message = new LobbyJoinMessage();
-    message.player = player.name;
+    message.player = player;
     const lobby = setup.aggregate;
     const playerModel = new Player();
-    playerModel.name = player.name;
-    playerModel.number = 1;
+
+    playerModel.name = player;
+    playerModel.number = setup.aggregate.getNumberOfPlayers();
     playerModel.connectionId = "thlkjslf";
     lobby.players.push(playerModel);
-    this.client.update(lobby);
+    await this.client.update(lobby);
 
     await setup.broadcast(message);
   }
 }
-
-// const voteState = new VoteState(code);
-// voteState.hydrateState();
-// const missionState = new MissionState(code);
-// if (
-//   voteState.shouldTransition() &&
-//   IsCurrentNominationSuccess(voteState.aggregate.game)
-// ) {
-//   missionState.hydrateState();
-//   voteState.transitionTo(missionState);
-// } else {
-//   voteState.transitionTo(voteState);
-// }

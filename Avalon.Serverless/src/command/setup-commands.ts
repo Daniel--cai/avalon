@@ -4,7 +4,7 @@ import { VoteState } from "../state/vote-state";
 import { IsCurrentNominationSuccess } from "../logic/game-logic";
 import { Vote } from "../schema/vote";
 
-export class VoteCommand {
+export class SetupCommand {
   private client: LobbyRepository;
 
   constructor() {

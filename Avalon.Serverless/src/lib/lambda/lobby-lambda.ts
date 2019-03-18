@@ -20,6 +20,10 @@ export const lobbyJoinHandler: Handler = async (event, context) => {
 
   try {
     await lobby.joinLobby(code, player);
+    await lobby.joinLobby(code, "player1");
+    await lobby.joinLobby(code, "player2");
+    await lobby.joinLobby(code, "player3");
+    await lobby.joinLobby(code, "player4");
     const success = {
       statusCode: 200,
       body: JSON.stringify(code)

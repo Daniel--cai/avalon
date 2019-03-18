@@ -39,10 +39,8 @@ export class BaseState implements StateMachine {
   public async hydrateState(aggregate: Lobby = null) {
     if (this.hydrated === true) return;
     if (aggregate === null) {
-      console.log("hydrating from new");
       this.aggregate = await this.client.getByCode(this.code);
     } else {
-      console.log("hydrating from existing");
       this.aggregate = aggregate;
     }
     this.hydrated = true;

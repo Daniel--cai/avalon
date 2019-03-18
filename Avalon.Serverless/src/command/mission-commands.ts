@@ -14,12 +14,6 @@ export class MissionCommand {
     this.client = new LobbyRepository();
   }
 
-  async createLobby() {
-    const lobby = new Lobby();
-    await this.client.create(lobby);
-    return lobby.code;
-  }
-
   async receiveMission(code: string, player: string, success: boolean) {
     const missionState = new MissionState(code);
 
