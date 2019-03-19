@@ -1,7 +1,6 @@
 export * from "./lobby-state";
 export * from "./merlin-state";
 export * from "./mission-state";
-export * from "./quest-state";
 
 import { SetupStateMethods } from "./setup-state";
 import { VotingStateMethods } from "./vote-state";
