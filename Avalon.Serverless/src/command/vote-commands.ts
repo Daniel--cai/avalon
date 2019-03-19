@@ -1,9 +1,8 @@
 import { LobbyRepository } from "../shared/client";
-import { VoteState, SetupState, MissionState } from "../state";
-import { IsCurrentNominationSuccess } from "../logic/game-logic";
 import { Vote } from "../schema/vote";
 import { GameState } from "../model/state";
 import { InvalidOperation } from "../error/invalid-operation";
+import { GameStateMachine } from "../state-machine";
 
 export class VoteCommand {
   private client: LobbyRepository;
@@ -13,10 +12,7 @@ export class VoteCommand {
   }
 
   async receiveVote(code: string, player: string, success: boolean) {
-    const voteState = new VoteState(code);
-    console.log(code);
-    await voteState.hydrateState();
-    const lobby = voteState.aggregate;
+    const lobby = await this.client.getByCode(code);
     if (lobby.game.state !== GameState.Voting) {
       throw new InvalidOperation("You cannot perform this action");
     }
@@ -29,19 +25,11 @@ export class VoteCommand {
       .GetCurrentMission()
       .GetCurrentNomination()
       .votes.push(vote);
-    console.log("updated");
+
+    const state = new GameStateMachine(GameState.Voting);
+    state.hydrate(lobby.game);
+    state.voteCommand();
+
     await this.client.update(lobby);
-
-    console.log("shouldTransition?");
-
-    if (!voteState.shouldTransition()) return;
-    if (IsCurrentNominationSuccess(voteState.aggregate.game)) {
-      console.log("accepted, time to go on a quest");
-      await voteState.transitionTo(new MissionState(code));
-    } else {
-      await voteState.transitionTo(new SetupState(code));
-      console.log("rejected, time to pick again");
-    }
-    console.log("done");
   }
 }

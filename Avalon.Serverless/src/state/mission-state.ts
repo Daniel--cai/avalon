@@ -1,42 +1,37 @@
-import { Player } from "../model/player";
-import { BaseState } from "./base-state";
 import { GameState } from "../model/state";
 import { Game } from "../schema/game";
-import { Mission } from "../schema/mission";
+import { Lifecycle } from "../state-machine";
+import {
+  HasMerlin,
+  IsGameFinished,
+  IsCurrentMissionSuccess,
+  SetNextNominator
+} from "../logic/game-logic";
 
-export interface SelectMissionRequest {
-  player: Player[];
-}
-
-export interface SelectMissionResponse {
-  players: Player[];
-  counter: number;
-}
-
-export class MissionState extends BaseState {
-  private state: any;
-  public type: GameState = GameState.Mission;
-
-  constructor(code: string) {
-    super(code);
-  }
-
-  onTransition() {
-    const lobby = this.aggregate;
-    lobby.game.round = lobby.game.round + 1;
-    this.getRepository().update(lobby);
-  }
-
-  shouldTransition(): boolean {
-    const mission = this.aggregate.game.GetCurrentMission();
-    return mission.GetCurrentQuest().length >= mission.quantity;
-  }
-  async transitionTo(newState: BaseState) {
-    if (this.shouldTransition()) {
-      this.onTransition();
-      this.changeState(GameState.Mission, newState.type);
-      await newState.hydrateState(this.aggregate);
-      newState.onEnter();
-    }
+export function handleTransition() {
+  const mission = this.data.GetCurrentMission();
+  if (mission.GetCurrentQuest().length < mission.quantity) {
+    console.log("not all players have submited");
+    return GameState.Mission;
+  } else if (!IsGameFinished(this.data)) {
+    console.log("back to setup");
+    return GameState.Setup;
+  } else if (HasMerlin(this.data)) {
+    return GameState.Merlin;
+  } else {
+    return GameState.GameOver;
   }
 }
+
+function onLeaveMission() {
+  const game: Game = this.data;
+  game.GetCurrentMission().success = IsCurrentMissionSuccess(this.data);
+  game.round = game.round + 1;
+
+  console.log("state lifecycle: onLeaveMission");
+  this.data = SetNextNominator(this.data);
+}
+
+export const MissionStateMethods = (() => {
+  return { onLeaveMission: onLeaveMission };
+})();

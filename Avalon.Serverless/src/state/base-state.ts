@@ -40,7 +40,6 @@ export class BaseState implements StateMachine {
       this.aggregate = aggregate;
     }
     this.hydrated = true;
-    console.log("hydrated");
   }
 
   public async changeState(stateFrom: GameState, stateTo: GameState) {

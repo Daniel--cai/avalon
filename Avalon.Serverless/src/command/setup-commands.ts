@@ -1,48 +1,38 @@
 import { LobbyRepository } from "../shared/client";
-import { IsCurrentNominationSuccess } from "../logic/game-logic";
-import { Vote } from "../schema/vote";
-import { VoteState, MissionState, SetupState } from "../state";
-import { Nomination } from "../schema/nomination";
 import { GameState } from "../model/state";
 import { InvalidOperation } from "../error/invalid-operation";
+import { GameStateMachine } from "../state-machine";
+import { Game } from "../schema/game";
 
 export class SetupCommand {
   private client: LobbyRepository;
-
+  public lobby: Game;
   constructor() {
     this.client = new LobbyRepository();
   }
 
   async selectPlayers(code: string, player: string, players: string[]) {
-    const setupState = new SetupState(code);
-    const voteState = new VoteState(code);
-    console.log(code);
-    await setupState.hydrateState();
-    const lobby = setupState.aggregate;
+    const lobby = await this.client.getByCode(code);
+    //validation
     if (lobby.game.state !== GameState.Setup) {
       throw new InvalidOperation("You cannot perform this action");
     }
 
-    if (
-      players.length !== setupState.aggregate.game.GetCurrentMission().quantity
-    ) {
+    if (players.length !== lobby.game.GetCurrentMission().quantity) {
       throw new InvalidOperation(
         `Not enough players nominated for mission. Requires ${
-          setupState.aggregate.game.GetCurrentMission().quantity
+          lobby.game.GetCurrentMission().quantity
         }`
       );
     }
 
-    console.log("selectPlayers: lobby");
-    console.log(lobby.game.GetCurrentMission().GetCurrentNomination());
+    const state = new GameStateMachine(lobby.game.state as GameState);
+
     lobby.game.GetCurrentMission().GetCurrentNomination().nominator = player;
     lobby.game.GetCurrentMission().GetCurrentNomination().nominees = players;
-    console.log(lobby.game.GetCurrentMission().GetCurrentNomination());
-    console.log("selectPlayers: nominations");
+    state.hydrate(lobby.game);
+    state.voteNomination();
+
     await this.client.update(lobby);
-    console.log("updated");
-    console.log(voteState);
-    await setupState.transitionTo(voteState);
-    console.log("done");
   }
 }

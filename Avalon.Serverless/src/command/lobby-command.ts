@@ -1,12 +1,7 @@
 import { LobbyRepository } from "../shared/client";
 import { Lobby } from "../schema/lobby";
 import * as moment from "moment";
-import { Game } from "../schema/game";
-import { Setup } from "../schema/setup";
-import { LobbyState } from "../state/lobby-state";
 import { Player } from "../model/player";
-import { Message } from "../message/message";
-import { LobbyJoinMessage } from "../message/lobby-message";
 
 export class LobbyCommand {
   private client: LobbyRepository;
@@ -27,14 +22,11 @@ export class LobbyCommand {
   }
 
   async joinLobby(code: string, player: string) {
-    const setup = new LobbyState(code);
-    await setup.hydrateState();
-
-    const lobby = setup.aggregate;
+    const lobby = await this.client.getByCode(code);
     const playerModel = new Player();
 
     playerModel.name = player;
-    playerModel.number = setup.aggregate.getNumberOfPlayers();
+    playerModel.number = lobby.getNumberOfPlayers();
     playerModel.connectionId = "thlkjslf";
     lobby.players.push(playerModel);
 
@@ -46,7 +38,5 @@ export class LobbyCommand {
 
     // lobby.events.push(message);
     await this.client.update(lobby);
-
-    // await setup.broadcast(message);
   }
 }

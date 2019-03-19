@@ -13,6 +13,7 @@
     "@types/aws-lambda": "^8.10.19",
     "@types/node": "^11.9.0",
     "@types/uuid": "^3.4.4",
+    "javascript-state-machine": "^3.1.0",
     "serverless": "^1.37.1",
     "serverless-dotenv-plugin": "^2.0.1",
     "serverless-offline": "^4.4.0",

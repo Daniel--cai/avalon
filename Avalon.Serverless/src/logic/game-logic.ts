@@ -1,7 +1,17 @@
 import { Game } from "../schema/game";
+import { Nomination } from "../schema/nomination";
 
 export function GetNextNominator(game: Game): string {
   return "";
+}
+
+export function SetNextNominator(game: Game): Game {
+  const nomination = new Nomination();
+  {
+    nomination.nominator = GetNextNominator(game);
+  }
+  game.GetCurrentMission().nominations.push(nomination);
+  return game;
 }
 
 export function GetMissionQuantity(game: Game): number[] {

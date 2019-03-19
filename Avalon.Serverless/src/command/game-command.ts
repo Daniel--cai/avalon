@@ -1,7 +1,8 @@
 import { LobbyRepository } from "../shared/client";
-import { SetupState } from "../state/setup-state";
-import { LobbyState } from "../state/lobby-state";
 import { GetMissionQuantity } from "../logic/game-logic";
+import { GameStateMachine } from "../state-machine";
+import { GameState } from "../model/state";
+import { InvalidOperation } from "../error/invalid-operation";
 
 export class GameCommand {
   private client: LobbyRepository;
@@ -11,11 +12,14 @@ export class GameCommand {
   }
 
   async startGame(code: string) {
-    const lobbyState = new LobbyState(code);
-    const setupState = new SetupState(code);
-    await lobbyState.hydrateState();
-    const lobby = lobbyState.aggregate;
+    const lobby = await this.client.getByCode(code);
 
+    if (lobby.game.state !== GameState.Lobby) {
+      throw new InvalidOperation("You cannot perform this action");
+    }
+
+    const state = new GameStateMachine(GameState.Lobby);
+    state.hydrate(lobby.game);
     lobby.game.players = [...lobby.players];
 
     const missionQuantity = GetMissionQuantity(lobby.game);
@@ -23,10 +27,7 @@ export class GameCommand {
     for (let index = 0; index < 5; index++) {
       lobby.game.missions[index].quantity = missionQuantity[index];
     }
-
+    state.startGame();
     await this.client.update(lobby);
-    console.log("startGame: updated client");
-    await lobbyState.transitionTo(setupState);
-    console.log("startGame: finish");
   }
 }
