@@ -20,11 +20,11 @@ export class LobbyRepository {
   }
 
   async create(lobby: Lobby) {
-    return this.mapper.put(lobby);
+    return await this.mapper.put(lobby);
   }
 
   async put(lobby: Lobby) {
-    return this.mapper.update(lobby);
+    return await this.mapper.update(lobby);
   }
 
   async update(lobby: Lobby) {
@@ -33,7 +33,7 @@ export class LobbyRepository {
 
   async getByCode(code: string) {
     let result: Lobby = null;
-    const lobbies = this.mapper.scan(Lobby, {
+    const lobbies = await this.mapper.scan(Lobby, {
       filter: {
         ...equals(code),
         subject: "code"
@@ -49,13 +49,7 @@ export class LobbyRepository {
 
   async getConnections(code: string) {
     let lobby = await this.getByCode(code);
-    return lobby.connectionId;
-  }
-
-  async createMission(code: string, mission: Mission) {
-    let lobby = await this.getByCode(code);
-    lobby.game.missions = [...lobby.game.missions, mission];
-    this.mapper.update(lobby);
+    return lobby.players.map(player => player.connectionId);
   }
 
   async disconnect(connectionId: string) {}
@@ -64,10 +58,10 @@ export class LobbyRepository {
     let result: Lobby = null;
     result = await this.getByCode(code);
 
-    if (result !== null) {
-      result.connectionId = [...result.connectionId, connectionId];
-      this.mapper.update(result);
-    }
+    // if (result !== null) {
+    //   result.connectionId = [...result.connectionId, connectionId];
+    //   this.mapper.update(result);
+    // }
     return result;
   }
 
@@ -75,7 +69,8 @@ export class LobbyRepository {
     const lobby = await this.getByCode(code);
     if (lobby !== null) {
       lobby.game.state = newState;
-      this.mapper.update(lobby);
+      await this.mapper.update(lobby);
+      console.log("client - changeState to " + newState);
     }
   }
 }

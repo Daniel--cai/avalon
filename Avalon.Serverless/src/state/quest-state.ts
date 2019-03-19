@@ -1,15 +1,15 @@
 import { Player } from "../model/player";
 
-export interface SelectMissionRequest {
-  player: Player[];
-}
+// export interface SelectMissionRequest {
+//   player: Player[];
+// }
 
-export interface SelectMissionResponse {
-  players: Player[];
-  counter: number;
-}
+// export interface SelectMissionResponse {
+//   players: Player[];
+//   counter: number;
+// }
 
-export class QuestEvent {
+export class QuestState {
   private state: any;
 
   onEnter() {}

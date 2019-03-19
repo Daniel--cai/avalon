@@ -1,11 +1,7 @@
 import { LobbyRepository } from "../shared/client";
-import { Lobby } from "../schema/lobby";
-import * as moment from "moment";
-import { Game } from "../schema/game";
-import { Setup } from "../schema/setup";
 import { SetupState } from "../state/setup-state";
 import { LobbyState } from "../state/lobby-state";
-import { GameState } from "../model/state";
+import { GetMissionQuantity } from "../logic/game-logic";
 
 export class GameCommand {
   private client: LobbyRepository;
@@ -18,6 +14,19 @@ export class GameCommand {
     const lobbyState = new LobbyState(code);
     const setupState = new SetupState(code);
     await lobbyState.hydrateState();
+    const lobby = lobbyState.aggregate;
+
+    lobby.game.players = [...lobby.players];
+
+    const missionQuantity = GetMissionQuantity(lobby.game);
+    console.log(missionQuantity);
+    for (let index = 0; index < 5; index++) {
+      lobby.game.missions[index].quantity = missionQuantity[index];
+    }
+
+    await this.client.update(lobby);
+    console.log("startGame: updated client");
     await lobbyState.transitionTo(setupState);
+    console.log("startGame: finish");
   }
 }

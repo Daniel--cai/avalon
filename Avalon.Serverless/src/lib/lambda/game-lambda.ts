@@ -24,7 +24,7 @@ export const gameGetHandler: Handler = async (event, context) => {
 
   try {
     const gameState = await gameQuery.getGame(code);
-    
+
     const success = {
       statusCode: 200,
       body: JSON.stringify(gameState)
@@ -44,6 +44,5 @@ export const gameGetHandler: Handler = async (event, context) => {
         body: JSON.stringify(ex.message)
       };
     }
-  }
   }
 };

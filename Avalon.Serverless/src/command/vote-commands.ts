@@ -1,8 +1,9 @@
 import { LobbyRepository } from "../shared/client";
-import { MissionState } from "../state/mission-state";
-import { VoteState } from "../state/vote-state";
+import { VoteState, SetupState, MissionState } from "../state";
 import { IsCurrentNominationSuccess } from "../logic/game-logic";
 import { Vote } from "../schema/vote";
+import { GameState } from "../model/state";
+import { InvalidOperation } from "../error/invalid-operation";
 
 export class VoteCommand {
   private client: LobbyRepository;
@@ -16,6 +17,9 @@ export class VoteCommand {
     console.log(code);
     await voteState.hydrateState();
     const lobby = voteState.aggregate;
+    if (lobby.game.state !== GameState.Voting) {
+      throw new InvalidOperation("You cannot perform this action");
+    }
     const vote = new Vote();
     {
       vote.player = player;
@@ -32,13 +36,11 @@ export class VoteCommand {
 
     if (!voteState.shouldTransition()) return;
     if (IsCurrentNominationSuccess(voteState.aggregate.game)) {
-      const missionState = new MissionState(code);
-      console.log("vote");
-      await missionState.hydrateState();
-      await voteState.transitionTo(missionState);
+      console.log("accepted, time to go on a quest");
+      await voteState.transitionTo(new MissionState(code));
     } else {
-      await voteState.transitionTo(voteState);
-      console.log("vote");
+      await voteState.transitionTo(new SetupState(code));
+      console.log("rejected, time to pick again");
     }
     console.log("done");
   }

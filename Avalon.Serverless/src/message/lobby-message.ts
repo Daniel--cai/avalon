@@ -3,16 +3,24 @@ import { Player } from "../model/player";
 import { GameState } from "../model/state";
 
 export class LobbyCreatedMessage implements Message {
-  type: Symbol = Symbol("LobbyCreatedMessage");
+  type: string = "LobbyCreatedMessage";
   code: string;
 }
 
-export class LobbyJoinMessage implements Message {
-  type: Symbol = Symbol("LobbyJoinMessage");
+export interface LobbyJoinMessage extends Event {
   player: string;
+  payload: any;
 }
 
+// export class LobbyJoinMessage implements Message {
+//   type: Symbol = Symbol("LobbyJoinMessage");
+//   player: string;
+//   constructor(player) {
+//     this.player = player;
+//   }
+// }
+
 export class LobbyLeaveMessage implements Message {
-  type: Symbol = Symbol("LobbyLeaveMessage");
+  type = "LobbyLeaveMessage";
   player: string;
 }

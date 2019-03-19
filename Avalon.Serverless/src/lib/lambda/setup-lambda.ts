@@ -1,13 +1,15 @@
 import { Handler } from "aws-lambda";
-import { VoteCommand } from "../../command/vote-commands";
+import { SetupCommand } from "../../command/setup-commands";
 import * as middy from "middy";
 import { httpErrorHandler } from "middy/middlewares";
 
-const voteHandlerFunction: Handler = async (event, context) => {
+const setupHandlerFunction: Handler = async (event, context) => {
   try {
-    const command = new VoteCommand();
-    const { code, player, success } = JSON.parse(event.body);
-    await command.receiveVote(code, player, success);
+    const command = new SetupCommand();
+    const { code, player, players } = JSON.parse(event.body);
+
+    await command.selectPlayers(code, player, players);
+
     const ok = {
       statusCode: 200,
       body: JSON.stringify(event.body)
@@ -23,4 +25,4 @@ const voteHandlerFunction: Handler = async (event, context) => {
   }
 };
 
-export const voteHandler = middy(voteHandlerFunction).use(httpErrorHandler());
+export const setupHandler = middy(setupHandlerFunction).use(httpErrorHandler());

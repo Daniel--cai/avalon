@@ -13,7 +13,7 @@ export class BaseState implements StateMachine {
   private client: LobbyRepository;
   private notification: Notification;
   private hydrated: boolean = false;
-  public type: GameState = GameState.GameOver;
+  public type: GameState = null;
 
   constructor(code: string) {
     this.client = new LobbyRepository();
@@ -22,14 +22,10 @@ export class BaseState implements StateMachine {
   }
 
   //stub implementation
-  public onEnter() {
-    throw Error("onEnter not implemented");
-  }
-  public onTransition() {
-    throw Error("onTransition not implemented");
-  }
+  public onEnter() {}
+  public onTransition() {}
   public shouldTransition(): boolean {
-    throw Error("shouldTransition not implemented");
+    return true;
   }
 
   public getRepository() {
@@ -44,9 +40,11 @@ export class BaseState implements StateMachine {
       this.aggregate = aggregate;
     }
     this.hydrated = true;
+    console.log("hydrated");
   }
 
   public async changeState(stateFrom: GameState, stateTo: GameState) {
+    console.log("changeState: begin to " + stateTo);
     if (this.aggregate.game.state !== stateFrom) {
       throw Error(
         `Invalid transition from ${stateFrom} to ${stateTo} for Game ${
@@ -54,16 +52,18 @@ export class BaseState implements StateMachine {
         } when currently ${this.aggregate.game.state}`
       );
     }
-    await this.client.changeState(this.aggregate.code, stateTo);
+    this.aggregate.game.state = stateTo;
+    await this.client.update(this.aggregate);
+    // await this.client.changeState(this.aggregate.code, stateTo);
+    console.log("changeState: finish to" + stateTo);
   }
 
   public async broadcast(message: Message) {
     //this.notification.broadcast(this.aggregate.code, message);
-    const event: Event = {
-      type: message.type.toString(),
-      payload: message
-    };
+    const event: Event = new Event();
+    event.SetPayload(message);
+
     this.aggregate.events = [...this.aggregate.events, event];
-    this.client.update(this.aggregate);
+    await this.client.update(this.aggregate);
   }
 }

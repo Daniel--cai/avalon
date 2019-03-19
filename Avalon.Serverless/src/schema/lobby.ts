@@ -12,6 +12,7 @@ import { Game } from "./game";
 import moment = require("moment");
 import * as uuid from "uuid/v1";
 import { Event } from "./event";
+import { Message } from "./message";
 
 @table(process.env.DYNAMODB_TABLE)
 export class Lobby {
@@ -32,9 +33,6 @@ export class Lobby {
 
   @attribute({ memberType: embed(Game) })
   game: Game;
-
-  @attribute()
-  connectionId: Array<string>;
 
   @attribute({ memberType: embed(Event) })
   events: Array<Event>;

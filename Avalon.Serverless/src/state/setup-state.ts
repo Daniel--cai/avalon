@@ -21,18 +21,15 @@ export class SetupState extends BaseState {
     super(code);
   }
   async onEnter() {
-    console.log("setupState");
+    console.log("setupState: onEnter");
     const nominator = GetNextNominator(this.aggregate.game);
 
     const nomination = new Nomination();
     {
       nomination.nominator = nominator;
     }
-    console.log("setup onEnter");
-    this.aggregate.game.GetCurrentMission().nominations = [
-      ...this.aggregate.game.GetCurrentMission().nominations,
-      nomination
-    ];
+    this.aggregate.game.GetCurrentMission().nominations.push(nomination);
+
     await this.getRepository().update(this.aggregate);
 
     console.log("sending SetupNominateMessage");
@@ -54,21 +51,17 @@ export class SetupState extends BaseState {
     await this.broadcast(message);
   }
 
-  async onReceiveMessage(message: Message) {
-    this.broadcast(message);
-  }
-
   async transitionTo(newState: BaseState) {
     if (this.shouldTransition()) {
       await this.onTransition();
+      console.log(`transitioning from Setup to ${newState.type}`);
       await this.changeState(GameState.Setup, newState.type);
-      await newState.hydrateState();
+      await newState.hydrateState(this.aggregate);
       await newState.onEnter();
     }
   }
 
   shouldTransition(): boolean {
-    if (this.aggregate.game.state === null) return true;
-    return false;
+    return true;
   }
 }

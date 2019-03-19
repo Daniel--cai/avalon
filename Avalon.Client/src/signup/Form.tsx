@@ -30,9 +30,7 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
   joinGame = async (code: string) => {
     const data = {
       code: code,
-      player: {
-        name: this.state.name
-      }
+      player: this.state.name
     };
     try {
       const response = await Api.Post("/lobby/join", data);
@@ -55,7 +53,7 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
   };
   render() {
     return (
-      <React.Fragment>
+      <>
         <div className="fieldset">
           <label>
             <span>Name</span>
@@ -91,7 +89,7 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
           )}
         </div>
         <div>{this.state.error}</div>
-      </React.Fragment>
+      </>
     );
   }
 }

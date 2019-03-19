@@ -15,17 +15,17 @@ export class Mission {
   quest: Array<Vote>;
 
   @attribute()
-  round: number;
+  quantity: number;
 
   @attribute()
-  quantity: number;
+  twoFails: boolean;
 
   constructor() {
     this.success = null;
     this.nominations = [];
     this.quest = [];
-    this.round = 1;
-    this.quantity = 0;
+    this.quantity = 3;
+    this.twoFails = false;
   }
 
   GetCurrentNomination() {

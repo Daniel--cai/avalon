@@ -1,3 +1,3 @@
 export interface Message {
-  type: Symbol;
+  type: string;
 }

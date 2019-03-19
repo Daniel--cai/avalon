@@ -6,5 +6,5 @@ import { Vote } from "../schema/vote";
 export class MissionResultMessage implements Message {
   votes: Vote[];
   success: boolean;
-  type: Symbol = Symbol("MissionResultMessage");
+  type: string = "MissionResultMessage";
 }

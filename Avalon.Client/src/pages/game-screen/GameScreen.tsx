@@ -1,44 +1,61 @@
-import React, { Component } from "react";
+import React, { useEffect, useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import Api from "../../framework/api";
+import { useAsyncEffect } from "../../framework";
 import { Game } from "../../model/Game";
 import { GameBoard } from "../../components/game-board";
-interface Player {
-  connectionId: string;
-  name: string;
-  number: number;
-}
 
-interface State {
-  game: Game | null;
-}
+import GameStore from "../../state/GameStore";
+import { observer } from "mobx-react-lite";
+import { NominatePlayer, VoteTeam } from "../../components/actions";
+import { PlayerSwitcher } from "../../components/test-helpers";
 
-type TParams = { code: string };
+export const GameScreen = observer(
+  (props: RouteComponentProps<{ code: string }>) => {
+    const store = useContext(GameStore);
 
-export class GameScreen extends React.Component<
-  RouteComponentProps<TParams>,
-  State
-> {
-  constructor(props: RouteComponentProps<TParams>) {
-    super(props);
-
-    this.state = { game: null };
-  }
-
-  async componentDidMount() {
-    const response = await Api.get(`/game/${this.props.match.params.code}`);
-    const game = response.data;
-    console.log(game);
-    this.setState({ game });
-  }
-
-  render() {
-    if (this.state.game === null) return <div>Loading...</div>;
+    useAsyncEffect(async () => {
+      try {
+        console.log("useAsyncEffect");
+        store.code = "";
+        const response = await Api.get(`/game/${props.match.params.code}`);
+        // const response = await Api.get(`/lobby/${props.match.params.code}`);
+        console.log(response);
+        const game: Game = response.data;
+        store.missions = game.missions;
+        store.state = game.state;
+        store.code = props.match.params.code;
+        store.loaded = true;
+        store.round = game.round;
+        console.log(game.players);
+        store.players = game.players;
+        console.log("store");
+        console.log(store);
+      } catch (ex) {
+        console.log("error");
+        store.loaded = false;
+        console.log(ex);
+      }
+    }, []);
+    console.log("isLoaded");
+    console.log(store.loaded);
+    console.log(store.players);
+    if (!store.loaded) return <div>Loading...</div>;
     return (
       <div>
-        <p>State: {this.state.game.state}</p>
-        <GameBoard game={this.state.game} />
+        <p>State: {store.state}</p>
+        <GameBoard
+          game={{
+            missions: store.missions,
+            state: store.state,
+            players: store.players,
+            round: store.round
+          }}
+        />
+        <NominatePlayer />
+        <VoteTeam />
+        <PlayerSwitcher players={store.players.map(player => player.name)} />
       </div>
     );
   }
-}
+);

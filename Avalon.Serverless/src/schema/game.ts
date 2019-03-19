@@ -3,6 +3,7 @@ import { embed } from "@aws/dynamodb-data-mapper";
 import { Mission } from "./mission";
 import { GameState } from "../model/state";
 import { Message } from "./message";
+import { Player } from "./player";
 
 export class Game {
   @attribute({ memberType: embed(Mission) })
@@ -14,12 +15,26 @@ export class Game {
   @attribute({ memberType: embed(Message) })
   requests: Array<Request>;
 
+  @attribute({ memberType: embed(Player) })
+  players: Array<Player>;
+
+  @attribute()
+  round: number;
+
   constructor() {
-    this.missions = [];
+    this.missions = [
+      new Mission(),
+      new Mission(),
+      new Mission(),
+      new Mission(),
+      new Mission()
+    ];
     this.state = GameState.Lobby;
+    this.players = [];
+    this.round = 1;
   }
 
   GetCurrentMission() {
-    return this.missions[this.missions.length - 1];
+    return this.missions[this.round - 1];
   }
 }

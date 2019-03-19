@@ -29,9 +29,7 @@ export class LobbyCommand {
   async joinLobby(code: string, player: string) {
     const setup = new LobbyState(code);
     await setup.hydrateState();
-    console.log("hydrated");
-    const message = new LobbyJoinMessage();
-    message.player = player;
+
     const lobby = setup.aggregate;
     const playerModel = new Player();
 
@@ -39,8 +37,16 @@ export class LobbyCommand {
     playerModel.number = setup.aggregate.getNumberOfPlayers();
     playerModel.connectionId = "thlkjslf";
     lobby.players.push(playerModel);
+
+    // const message: LobbyJoinMessage = {
+    //   type: "LobbyJoinMessage",
+    //   player: player,
+    //   payload: playerModel
+    // };
+
+    // lobby.events.push(message);
     await this.client.update(lobby);
 
-    await setup.broadcast(message);
+    // await setup.broadcast(message);
   }
 }

@@ -78,6 +78,19 @@ functions:
       - http:
           path: vote
           method: post
+  setupCommand:
+    handler: src/lib/lambda/setup-lambda.setupHandler
+    events:
+      - http:
+          path: setup
+          method: post
+  missionCommand:
+    handler: src/lib/lambda/mission-lambda.missionHandler
+    events:
+      - http:
+          path: mission
+          method: post
+
   voteNotification:
     handler: src/lib/notification/vote-notification.voteNotification
     events:

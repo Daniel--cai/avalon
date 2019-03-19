@@ -1,46 +1,41 @@
-import { Player } from "../model/player";
 import { BaseState } from "./base-state";
-
 import { GameState } from "../model/state";
-
-import { Command } from "../command/command";
 import { VoteCountedMessage } from "../message/vote-message";
 import { Nomination } from "../schema/nomination";
-import { GetNextNominator } from "../logic/game-logic";
-import { Message } from "../message/message";
-import { MissionState } from "./mission-state";
+import {
+  GetNextNominator,
+  IsCurrentNominationSuccess
+} from "../logic/game-logic";
+import { MissionState, SetupState } from ".";
 
 export class VoteState extends BaseState {
-  public Type: GameState = GameState.Voting;
+  public type: GameState = GameState.Voting;
 
   constructor(code: string) {
     super(code);
   }
   async onEnter() {
-    const nomination = new Nomination();
-    console.log("onEnter");
-    console.log(this.aggregate);
-    nomination.nominator = GetNextNominator(this.aggregate.game);
-
-    this.aggregate.game.GetCurrentMission().nominations = [
-      ...this.aggregate.game.GetCurrentMission().nominations,
-      nomination
-    ];
-    this.getRepository().update(this.aggregate);
+    // const nomination = new Nomination();
+    // console.log("vote onEnter");
+    // nomination.nominator = GetNextNominator(this.aggregate.game);
+    // console.log("current state " + this.aggregate.game.state);
+    // console.log(this.aggregate.game.GetCurrentMission());
+    // this.aggregate.game.GetCurrentMission().nominations.push(nomination);
+    // this.getRepository().update(this.aggregate);
   }
 
   async onTransition() {
     const code = this.aggregate.code;
     const message = new VoteCountedMessage();
-    message.success = true;
+    message.success = IsCurrentNominationSuccess(this.aggregate.game);
     message.votes = this.aggregate.game
       .GetCurrentMission()
       .GetCurrentNomination().votes;
-    this.broadcast(message);
+    // this.broadcast(message);
     if (message.success) {
       this.transitionTo(new MissionState(this.aggregate.code));
     } else {
-      this.transitionTo(new VoteState(this.aggregate.code));
+      this.transitionTo(new SetupState(this.aggregate.code));
     }
   }
 
@@ -48,6 +43,7 @@ export class VoteState extends BaseState {
     if (this.shouldTransition()) {
       //this.onTransition();
       this.changeState(GameState.Voting, newState.type);
+      await newState.hydrateState(this.aggregate);
       newState.onEnter();
     }
   }

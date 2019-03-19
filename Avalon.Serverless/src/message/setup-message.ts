@@ -4,11 +4,14 @@ import { GameState } from "../model/state";
 
 export class SetupSelectedMessage implements Message {
   players: string[];
-  type: Symbol = Symbol("SetupSelectedMessage");
+  type: "SetupSelectedMessage";
 }
 
 export class SetupNominateMessage implements Message {
   player: string;
   quantity: number;
-  type: Symbol = Symbol("SetupNominateMessage");
+  type: string;
+  constructor() {
+    this.type = "SetupNominateMessage";
+  }
 }
