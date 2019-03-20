@@ -1,5 +1,5 @@
 import { Handler } from "aws-lambda";
-import { MissionCommand } from "../../command/mission-commands";
+import { MissionCommand } from "../../command";
 import * as middy from "middy";
 import { httpErrorHandler } from "middy/middlewares";
 
@@ -8,7 +8,7 @@ const missionHandlerFunction: Handler = async (event, context) => {
     const command = new MissionCommand();
     const { code, player, success } = JSON.parse(event.body);
 
-    await command.receiveMission(code, player, success);
+    await command.submitMission({ code, player, success });
 
     const ok = {
       statusCode: 200,

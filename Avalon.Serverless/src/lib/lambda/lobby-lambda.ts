@@ -1,8 +1,8 @@
 import { Handler } from "aws-lambda";
 
-import { LobbyCommand } from "../../command/lobby-command";
+import { LobbyCommand } from "../../command";
 import { LobbyQuery } from "../../query/lobby-query";
-import { NotFoundError } from "../../error/not-found-error";
+import { NotFoundError } from "../../lib/error/not-found-error";
 
 export const lobbyCreateHandler: Handler = async (event, context) => {
   const lobby = new LobbyCommand();
@@ -47,9 +47,8 @@ export const lobbyJoinHandler: Handler = async (event, context) => {
 };
 
 export const getPlayers: Handler = async (event, context) => {
-  const lobby = new LobbyQuery();
   const code = event.pathParameters.code;
-  const players = await lobby.getPlayers(code);
+  const players = await new LobbyQuery().getPlayers(code);
   const success = {
     statusCode: 200,
     body: JSON.stringify(players)

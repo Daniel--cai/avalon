@@ -1,16 +1,15 @@
 import { Handler } from "aws-lambda";
 
-import { GameCommand } from "../../command/game-command";
 import { GameQuery } from "../../query/game-query";
-import { NotFoundError } from "../../error/not-found-error";
+import { NotFoundError } from "../../lib/error/not-found-error";
+import { LobbyCommand } from "../../command";
 
 export const gameHandler: Handler = async (event, context) => {
-  const game = new GameCommand();
+  const lobby = new LobbyCommand();
 
   const body = JSON.parse(event.body);
 
-  await game.startGame(body.code);
-  const gameState = await new GameQuery().getGame(body.code);
+  const gameState = await lobby.startGame({ code: body.code });
   const success = {
     statusCode: 200,
     body: JSON.stringify(gameState)
@@ -33,6 +32,7 @@ export const gameGetHandler: Handler = async (event, context) => {
   } catch (ex) {
     if (ex instanceof NotFoundError) {
       console.log(404);
+      console.log(ex);
       return {
         statusCode: 404,
         body: JSON.stringify(`Cannot find game ${code}`)

@@ -7,12 +7,8 @@ import { handleTransition as HandleMissionTransition } from "../state/mission-st
 import { handleTransition as HandleVoteTransition } from "../state/vote-state";
 export interface FiniteStateMachine {
   startGame: () => void;
-  voteNomination: () => void;
-  rejectNomination: () => void;
-  acceptNomination: () => void;
-  finishMission: () => void;
+  voteQuest: () => void;
   finishGame: () => void;
-  chooseMerlin: () => void;
   voteCommand: (command: any) => void;
   missionCommand: (command: any) => void;
   getGameData: () => Game;
@@ -26,7 +22,6 @@ export interface Lifecycle {
 
 export class GameStateMachine implements FiniteStateMachine {
   statemachine: any;
-
   constructor(current: GameState = GameState.Lobby) {
     console.log("constrcutor");
     console.log(current);
@@ -36,34 +31,14 @@ export class GameStateMachine implements FiniteStateMachine {
         transitions: [
           { name: "startGame", from: GameState.Lobby, to: GameState.Setup },
           {
-            name: "voteNomination",
+            name: "voteQuest",
             from: GameState.Setup,
             to: GameState.Voting
-          },
-          {
-            name: "rejectNomination",
-            from: GameState.Voting,
-            to: GameState.Setup
-          },
-          {
-            name: "acceptNomination",
-            from: GameState.Voting,
-            to: GameState.Mission
-          },
-          {
-            name: "finishMission",
-            from: GameState.Mission,
-            to: GameState.Setup
           },
           {
             name: "finishGame",
             from: GameState.Mission,
             to: GameState.GameOver
-          },
-          {
-            name: "chooseMerlin",
-            from: GameState.Mission,
-            to: GameState.Merlin
           },
           {
             name: "finishGame",
@@ -102,19 +77,6 @@ export class GameStateMachine implements FiniteStateMachine {
       });
 
       console.log(`constructing with init state ${this.statemachine.state}`);
-
-      this.statemachine.observe({
-        onStartGame: () => {
-          console.log("state method: onStartGame!");
-        },
-        onCommand: () => {
-          console.log("state method: onCommand!");
-        },
-
-        onMission: () => {
-          console.log("state lifecycle: onMission");
-        }
-      });
     } catch (ex) {
       console.log("exception in constructor");
       console.log(ex);
@@ -125,27 +87,17 @@ export class GameStateMachine implements FiniteStateMachine {
     console.log(`currently ${this.statemachine.state}, hydrating now`);
     this.statemachine.data = game;
   }
+
   startGame() {
     this.statemachine.startGame();
   }
 
-  voteNomination() {
-    this.statemachine.voteNomination();
+  voteQuest() {
+    this.statemachine.voteQuest();
   }
-  rejectNomination() {
-    this.statemachine.rejectNomination();
-  }
-  acceptNomination() {
-    this.statemachine.acceptNomination();
-  }
-  finishMission() {
-    this.statemachine.finishMission();
-  }
+
   finishGame() {
-    this.statemachine.finishGame();
-  }
-  chooseMerlin() {
-    this.statemachine.chooseMerlin();
+    this.statemachine.voteQuest();
   }
 
   missionCommand(command: any = null) {
@@ -165,11 +117,4 @@ export class GameStateMachine implements FiniteStateMachine {
   getState() {
     return this.statemachine.state;
   }
-}
-
-function commandHandlerFactory(command: any) {
-  console.log("commandHandlerFactory");
-  console.log(command);
-  console.log(this.state);
-  return GameState.Mission;
 }

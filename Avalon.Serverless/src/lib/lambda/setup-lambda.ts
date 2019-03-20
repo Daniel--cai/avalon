@@ -1,5 +1,5 @@
 import { Handler } from "aws-lambda";
-import { SetupCommand } from "../../command/setup-commands";
+import { SetupCommand } from "../../command";
 import * as middy from "middy";
 import { httpErrorHandler } from "middy/middlewares";
 
@@ -8,7 +8,7 @@ const setupHandlerFunction: Handler = async (event, context) => {
     const command = new SetupCommand();
     const { code, player, players } = JSON.parse(event.body);
 
-    await command.selectPlayers(code, player, players);
+    await command.submitTeam({ code, player, players });
 
     const ok = {
       statusCode: 200,
@@ -16,6 +16,7 @@ const setupHandlerFunction: Handler = async (event, context) => {
     };
     return ok;
   } catch (ex) {
+    console.log("err");
     console.log(ex);
     const error = {
       statusCode: 500,

@@ -1,8 +1,5 @@
 import { attribute } from "@aws/dynamodb-data-mapper-annotations";
-
-import { Vote } from "./vote";
-
-import { Nomination } from "./nomination";
+import { Nomination, Vote } from "./";
 
 export class Mission {
   @attribute()

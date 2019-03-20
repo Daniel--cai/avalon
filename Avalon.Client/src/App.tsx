@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
-import { Signup } from "./signup";
+import { Signup } from "./components/signup";
 
 import { Lobby } from "./lobby";
 import { GameScreen } from "./pages/game-screen";

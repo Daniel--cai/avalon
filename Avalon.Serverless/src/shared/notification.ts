@@ -1,6 +1,5 @@
 import { LobbyRepository } from "./client";
 import * as AWS from "aws-sdk";
-import { Message } from "../message/message";
 
 export class Notification {
   private api: AWS.ApiGatewayManagementApi;
@@ -15,7 +14,7 @@ export class Notification {
     this.lobby = new LobbyRepository();
   }
 
-  broadcast = async (code: string, message: Message) => {
+  broadcast = async (code: string, message: any) => {
     const connections = (await this.lobby.getConnections(code)) || [];
     const { type, ...body } = message;
 
@@ -45,7 +44,7 @@ export class Notification {
     await Promise.all(sent);
   };
 
-  send = async (connectionId: string, message: Message) => {
+  send = async (connectionId: string, message: any) => {
     const payload = {
       action: message.type,
       payload: message

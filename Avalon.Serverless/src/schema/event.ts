@@ -1,5 +1,5 @@
 import { attribute } from "@aws/dynamodb-data-mapper-annotations";
-import { Player } from "../model/player";
+import { Event as EventType } from "../contract";
 
 export class Event {
   @attribute()
@@ -11,14 +11,11 @@ export class Event {
   @attribute()
   player: string;
 
-  @attribute()
-  fulfilled: boolean;
-
-  SetPayload(obj: object) {
-    this.payload = JSON.stringify(obj);
-  }
-
-  GetPayload() {
-    return JSON.parse(this.payload);
+  constructor(event?: EventType, player?: string) {
+    if (event != null) {
+      this.type = event.type;
+      this.payload = JSON.stringify(event);
+      this.player = player;
+    }
   }
 }

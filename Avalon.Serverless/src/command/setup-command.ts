@@ -1,8 +1,9 @@
 import { LobbyRepository } from "../shared/client";
 import { GameState } from "../model/state";
-import { InvalidOperation } from "../error/invalid-operation";
+import { InvalidOperation } from "../lib/error/invalid-operation";
 import { GameStateMachine } from "../state-machine";
 import { Game } from "../schema/game";
+import { SubmitTeamCommand } from "../contract";
 
 export class SetupCommand {
   private client: LobbyRepository;
@@ -11,14 +12,14 @@ export class SetupCommand {
     this.client = new LobbyRepository();
   }
 
-  async selectPlayers(code: string, player: string, players: string[]) {
-    const lobby = await this.client.getByCode(code);
+  async submitTeam(command: SubmitTeamCommand) {
+    const lobby = await this.client.getByCode(command.code);
     //validation
     if (lobby.game.state !== GameState.Setup) {
       throw new InvalidOperation("You cannot perform this action");
     }
 
-    if (players.length !== lobby.game.GetCurrentMission().quantity) {
+    if (command.players.length !== lobby.game.GetCurrentMission().quantity) {
       throw new InvalidOperation(
         `Not enough players nominated for mission. Requires ${
           lobby.game.GetCurrentMission().quantity
@@ -28,10 +29,12 @@ export class SetupCommand {
 
     const state = new GameStateMachine(lobby.game.state as GameState);
 
-    lobby.game.GetCurrentMission().GetCurrentNomination().nominator = player;
-    lobby.game.GetCurrentMission().GetCurrentNomination().nominees = players;
+    lobby.game.GetCurrentMission().GetCurrentNomination().nominator =
+      command.player;
+    lobby.game.GetCurrentMission().GetCurrentNomination().nominees =
+      command.players;
     state.hydrate(lobby.game);
-    state.voteNomination();
+    state.voteQuest();
 
     await this.client.update(lobby);
   }

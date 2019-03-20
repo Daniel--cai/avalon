@@ -1,8 +1,9 @@
 import { LobbyRepository } from "../shared/client";
 import { Vote } from "../schema/vote";
 import { GameState } from "../model/state";
-import { InvalidOperation } from "../error/invalid-operation";
+import { InvalidOperation } from "../lib/error/invalid-operation";
 import { GameStateMachine } from "../state-machine";
+import { SubmitMissionCommand } from "../contract";
 
 export class MissionCommand {
   private client: LobbyRepository;
@@ -11,8 +12,8 @@ export class MissionCommand {
     this.client = new LobbyRepository();
   }
 
-  async receiveMission(code: string, player: string, success: boolean) {
-    const lobby = await this.client.getByCode(code);
+  async submitMission(command: SubmitMissionCommand) {
+    const lobby = await this.client.getByCode(command.code);
 
     if (lobby.game.state !== GameState.Mission) {
       throw new InvalidOperation("You cannot perform this action");
@@ -23,8 +24,8 @@ export class MissionCommand {
     state.hydrate(lobby.game);
 
     const vote = new Vote();
-    vote.player = player;
-    vote.succeed = success;
+    vote.player = command.player;
+    vote.succeed = command.success;
 
     lobby.game.GetCurrentMission().quest.push(vote);
 

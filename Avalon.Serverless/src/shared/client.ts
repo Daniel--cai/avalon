@@ -4,8 +4,7 @@ import { DynamoDB } from "aws-sdk";
 import { Lobby } from "../schema/lobby";
 import { equals } from "@aws/dynamodb-expressions";
 import { GameState } from "../model/state";
-import { Mission } from "../schema/mission";
-import { NotFoundError } from "../error/not-found-error";
+import { NotFoundError } from "../lib/error/not-found-error";
 
 export class LobbyRepository {
   private mapper: DataMapper;
@@ -45,32 +44,5 @@ export class LobbyRepository {
 
     if (result === null) throw new NotFoundError(`Cannot find lobby ${code}`);
     return result;
-  }
-
-  async getConnections(code: string) {
-    let lobby = await this.getByCode(code);
-    return lobby.players.map(player => player.connectionId);
-  }
-
-  async disconnect(connectionId: string) {}
-
-  async connect(code: string, connectionId: string) {
-    let result: Lobby = null;
-    result = await this.getByCode(code);
-
-    // if (result !== null) {
-    //   result.connectionId = [...result.connectionId, connectionId];
-    //   this.mapper.update(result);
-    // }
-    return result;
-  }
-
-  async changeState(code: string, newState: GameState) {
-    const lobby = await this.getByCode(code);
-    if (lobby !== null) {
-      lobby.game.state = newState;
-      await this.mapper.update(lobby);
-      console.log("client - changeState to " + newState);
-    }
   }
 }
