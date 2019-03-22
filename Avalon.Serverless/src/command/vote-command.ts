@@ -17,11 +17,8 @@ export class VoteCommand {
     if (lobby.game.state !== GameState.Voting) {
       throw new InvalidOperation("You cannot perform this action");
     }
-    const vote = new Vote();
-    {
-      vote.player = command.player;
-      vote.succeed = command.success;
-    }
+    const vote = new Vote(command.player, command.success);
+
     lobby.game
       .GetCurrentMission()
       .GetCurrentNomination()

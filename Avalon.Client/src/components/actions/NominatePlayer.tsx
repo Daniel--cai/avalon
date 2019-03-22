@@ -43,7 +43,7 @@ export const NominatePlayer = observer(() => {
 
   return (
     <>
-      <table>
+      <table className="u-full-width">
         <tbody>
           {store.players.map(player => {
             return (
@@ -61,7 +61,7 @@ export const NominatePlayer = observer(() => {
                         !selected.includes(player.name)
                       }
                     />
-                    {player.name}
+                    <span className="label-body"> {player.name}</span>
                   </label>
                 </td>
               </tr>

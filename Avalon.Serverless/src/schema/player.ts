@@ -9,4 +9,10 @@ export class Player {
 
   @attribute()
   number: number;
+
+  constructor() {
+    this.connectionId = "";
+    this.name = "";
+    this.number = 0;
+  }
 }

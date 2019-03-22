@@ -21,7 +21,7 @@ export class Mission {
     this.success = null;
     this.nominations = [];
     this.quest = [];
-    this.quantity = 3;
+    this.quantity = 0;
     this.twoFails = false;
   }
 

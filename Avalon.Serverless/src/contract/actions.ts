@@ -1,24 +1,20 @@
-export interface SelectTeam {
+export type SelectTeam = {
   type: "SelectTeam";
-  player: string;
-  quantity: number;
+  players: string[];
   round: number;
-}
-
-export interface VoteTeam {
+};
+export type VoteTeam = {
   type: "VoteTeam";
   players: string[];
   round: number;
-}
-
-export interface CompleteTeam {
+};
+export type CompleteTeam = {
   type: "CompleteTeam";
   round: number;
-}
-
-export interface SelectMerlin {
+};
+export type SelectMerlin = {
   type: "SelectMerlin";
   player: string;
-}
+};
 
 export type Action = SelectTeam | VoteTeam | CompleteTeam | SelectMerlin;

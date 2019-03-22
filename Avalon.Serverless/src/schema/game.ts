@@ -2,7 +2,8 @@ import { attribute } from "@aws/dynamodb-data-mapper-annotations";
 import { embed } from "@aws/dynamodb-data-mapper";
 import { Mission } from "./mission";
 import { GameState } from "../model/state";
-import { Action, Player, Event } from ".";
+import { Action, Event } from ".";
+import { Player } from "./player";
 
 export class Game {
   @attribute({ memberType: embed(Mission) })
@@ -10,9 +11,6 @@ export class Game {
 
   @attribute()
   state: string;
-
-  @attribute({ memberType: embed(Player) })
-  players: Array<Player>;
 
   @attribute()
   round: number;
@@ -22,6 +20,10 @@ export class Game {
 
   @attribute({ memberType: embed(Action) })
   actions: Array<Action>;
+
+  @attribute({ memberType: embed(Player) })
+  players: Array<Player>;
+
   constructor() {
     this.missions = [
       new Mission(),

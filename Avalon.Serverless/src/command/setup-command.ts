@@ -19,6 +19,9 @@ export class SetupCommand {
       throw new InvalidOperation("You cannot perform this action");
     }
 
+    console.log("submitTeam");
+    console.log(command.type);
+
     if (command.players.length !== lobby.game.GetCurrentMission().quantity) {
       throw new InvalidOperation(
         `Not enough players nominated for mission. Requires ${

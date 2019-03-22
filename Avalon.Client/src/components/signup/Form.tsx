@@ -51,45 +51,55 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
   isJoinDisabled = () => {
     return this.state.name.trim() === "";
   };
+
   render() {
     return (
-      <>
-        <div className="fieldset">
-          <label>
-            <span>Name</span>
-            <input
-              name="name"
-              className="field"
-              placeholder="Bob Smith"
-              value={this.state.name}
-              onChange={this.handleChange}
-            />
-          </label>
-          <label>
-            <span>Code</span>
+      <div className="row">
+        <div className="six columns">
+          <label>Name</label>
+
+          <input
+            name="name"
+            className="u-full-width"
+            placeholder="Bob Smith"
+            value={this.state.name}
+            onChange={this.handleChange}
+            type="text"
+          />
+          <div className="row">
+            <label>Code</label>
             <input
               name="code"
-              type="Code"
-              className="field"
+              type="text"
+              className="u-full-width"
               value={this.state.code}
               maxLength={4}
               placeholder="bob@example.com"
               onChange={this.handleChange}
             />
-          </label>
+          </div>
         </div>
         <div className="fieldset">
           {this.state.code === "" && (
-            <button onClick={this.handleCreate}>Create</button>
+            <button
+              onClick={this.handleCreate}
+              className="button-primary u-full-width"
+            >
+              Create
+            </button>
           )}
           {this.state.code !== "" && (
-            <button onClick={this.handleClick} disabled={this.isJoinDisabled()}>
+            <button
+              className="button-primary u-full-width "
+              onClick={this.handleClick}
+              disabled={this.isJoinDisabled()}
+            >
               Join
             </button>
           )}
         </div>
         <div>{this.state.error}</div>
-      </>
+      </div>
     );
   }
 }

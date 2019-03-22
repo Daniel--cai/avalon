@@ -12,9 +12,9 @@ export class Signup extends Component<any, State> {
   };
   render() {
     return (
-      <div id="signup">
-        <div className="form-wrapper">
-          <p className="form-header">Enter a new game</p>
+      <div id="signup" className="row">
+        <div className="">
+          <h4>Enter a new game</h4>
           <Form />
         </div>
       </div>

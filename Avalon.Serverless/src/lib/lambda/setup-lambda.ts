@@ -8,7 +8,12 @@ const setupHandlerFunction: Handler = async (event, context) => {
     const command = new SetupCommand();
     const { code, player, players } = JSON.parse(event.body);
 
-    await command.submitTeam({ code, player, players });
+    await command.submitTeam({
+      type: "SubmitTeamCommand",
+      code,
+      player,
+      players
+    });
 
     const ok = {
       statusCode: 200,

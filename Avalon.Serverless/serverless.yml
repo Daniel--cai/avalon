@@ -27,7 +27,11 @@ provider:
             - "/"
             - - Fn::GetAtt: [lobbyTable, Arn]
               - "*"
-
+    - Effect: "Allow"
+      Action:
+        - "sns:Publish"
+      Resource:
+        - ${self:custom.myTopic}
 websocketApiRouteSelectionExpression: $request.body.action
 
 functions:
@@ -85,13 +89,20 @@ functions:
       - http:
           path: mission
           method: post
+  voteNotification:
+    handler: src/lib/notification/vote-notification.voteNotification
+    events:
+      - sns:
+          topicName: dispatch
+          filterPolicy:
+            type:
+              - vote
   # commandHandler:
   #   handler: src/lib/lambda/command-lambda.commandHandler
   #   events:
   #     - http:
   #         path: command
   #         method: post
-
 resources:
   Resources:
     usersTable:
@@ -109,6 +120,15 @@ resources:
           WriteCapacityUnits: 1
 
 custom:
+  myTopic:
+    Fn::Join:
+      - ":"
+      - - arn
+        - aws
+        - sns
+        - Ref: AWS::Region
+        - Ref: AWS::AccountId
+        - dispatch
   webpack:
     includeModules: true
     packager: "npm"

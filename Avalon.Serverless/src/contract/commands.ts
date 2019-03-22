@@ -1,35 +1,31 @@
-export interface StartGameCommand {
+export type StartGameCommand = {
   type: "StartGameCommand";
   code: string;
-}
-
-export interface SubmitTeamCommand {
+};
+export type SubmitTeamCommand = {
   type: "SubmitTeamCommand";
   code: string;
   player: string;
   players: string[];
-}
-
-export interface SubmitVoteCommand {
+};
+export type SubmitVoteCommand = {
   type: "SubmitVoteCommand";
   code: string;
   player: string;
   success: boolean;
-}
-
-export interface SubmitMissionCommand {
+};
+export type SubmitMissionCommand = {
   type: "SubmitMissionCommand";
   code: string;
   player: string;
   success: boolean;
-}
-
-export interface SubmitMerlinCommand {
+};
+export type SubmitMerlinCommand = {
   type: "SubmitMerlinCommand";
   code: string;
   player: string;
   success: boolean;
-}
+};
 
 export type Command =
   | StartGameCommand

@@ -6,4 +6,9 @@ export class Vote {
 
   @attribute()
   succeed: boolean;
+
+  constructor(player?: string, succeed?: boolean) {
+    this.player = player;
+    this.succeed = succeed;
+  }
 }

@@ -44,14 +44,14 @@ export const GameScreen = observer(
     return (
       <div>
         <p>State: {store.state}</p>
-        <GameBoard
+        {/* <GameBoard
           game={{
             missions: store.missions,
             state: store.state,
             players: store.players,
             round: store.round
           }}
-        />
+        /> */}
         <NominatePlayer />
         <VoteTeam />
         <PlayerSwitcher players={store.players.map(player => player.name)} />

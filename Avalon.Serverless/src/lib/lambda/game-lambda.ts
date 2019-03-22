@@ -5,16 +5,28 @@ import { NotFoundError } from "../../lib/error/not-found-error";
 import { LobbyCommand } from "../../command";
 
 export const gameHandler: Handler = async (event, context) => {
-  const lobby = new LobbyCommand();
+  try {
+    const lobby = new LobbyCommand();
 
-  const body = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
 
-  const gameState = await lobby.startGame({ code: body.code });
-  const success = {
-    statusCode: 200,
-    body: JSON.stringify(gameState)
-  };
-  return success;
+    const gameState = await lobby.startGame({
+      type: "StartGameCommand",
+      code: body.code
+    });
+    const success = {
+      statusCode: 200,
+      body: JSON.stringify(gameState)
+    };
+    return success;
+  } catch (ex) {
+    console.log("erro!");
+    console.log(ex);
+    return {
+      statusCode: 500,
+      body: JSON.stringify(ex)
+    };
+  }
 };
 
 export const gameGetHandler: Handler = async (event, context) => {

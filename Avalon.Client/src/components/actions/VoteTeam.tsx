@@ -40,10 +40,24 @@ export const VoteTeam = observer(() => {
 
   return (
     <>
-      <button onClick={sendVote(true)}>Accept</button>
-      <button onClick={sendVote(false)}>Reject</button>
-      <button onClick={sendQuest(true)}>Success</button>
-      <button onClick={sendQuest(false)}>Fail</button>
+      <div className="one-half column">
+        <button className="u-full-width" onClick={sendVote(true)}>
+          Accept
+        </button>
+      </div>
+      <div className="one-half column">
+        <button className="u-full-width" onClick={sendVote(false)}>
+          Reject
+        </button>
+      </div>
+      <div className="one-half column">
+        <button className="u-full-width" onClick={sendQuest(true)}>
+          Success
+        </button>
+        <button className="u-full-width" onClick={sendQuest(false)}>
+          Fail
+        </button>
+      </div>
     </>
   );
 });

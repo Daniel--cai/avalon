@@ -5,13 +5,21 @@ import { LobbyQuery } from "../../query/lobby-query";
 import { NotFoundError } from "../../lib/error/not-found-error";
 
 export const lobbyCreateHandler: Handler = async (event, context) => {
-  const lobby = new LobbyCommand();
-  const code = await lobby.createLobby();
-  const success = {
-    statusCode: 200,
-    body: JSON.stringify(code)
-  };
-  return success;
+  try {
+    const lobby = new LobbyCommand();
+    const code = await lobby.createLobby();
+    const success = {
+      statusCode: 200,
+      body: JSON.stringify(code)
+    };
+    return success;
+  } catch (ex) {
+    console.log(ex);
+    return {
+      statusCode: 400,
+      body: JSON.stringify(ex)
+    };
+  }
 };
 
 export const lobbyJoinHandler: Handler = async (event, context) => {

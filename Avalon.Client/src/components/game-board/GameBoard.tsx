@@ -7,7 +7,7 @@ interface Props {
 
 export const GameBoard = (props: Props) => {
   return (
-    <table>
+    <table className="u-full-width">
       <thead>
         <tr>
           <th>State</th>

@@ -15,7 +15,9 @@ export class Notification {
   }
 
   broadcast = async (code: string, message: any) => {
-    const connections = (await this.lobby.getConnections(code)) || [];
+    const lobby = await this.lobby.getByCode(code);
+
+    const connections = lobby.getConnections() || [];
     const { type, ...body } = message;
 
     const payload = {
@@ -35,7 +37,7 @@ export class Notification {
           .promise();
       } catch (e) {
         if (e.statusCode === 410) {
-          this.lobby.disconnect(connectionId);
+          //this.lobby.disconnect(connectionId);
         } else {
           throw e;
         }
@@ -55,7 +57,7 @@ export class Notification {
         .promise();
     } catch (e) {
       if (e.statusCode === 410) {
-        this.lobby.disconnect(connectionId);
+        // this.lobby.disconnect(connectionId);
       } else {
         throw e;
       }

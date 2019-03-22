@@ -8,7 +8,12 @@ const missionHandlerFunction: Handler = async (event, context) => {
     const command = new MissionCommand();
     const { code, player, success } = JSON.parse(event.body);
 
-    await command.submitMission({ code, player, success });
+    await command.submitMission({
+      type: "SubmitMissionCommand",
+      code,
+      player,
+      success
+    });
 
     const ok = {
       statusCode: 200,

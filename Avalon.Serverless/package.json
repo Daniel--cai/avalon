@@ -33,6 +33,7 @@
     "middy": "^0.23.0",
     "moment": "^2.24.0",
     "serverless-dynamodb-local": "^0.2.30",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "xstate": "^4.3.3"
   }
 }

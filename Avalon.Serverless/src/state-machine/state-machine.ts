@@ -23,8 +23,6 @@ export interface Lifecycle {
 export class GameStateMachine implements FiniteStateMachine {
   statemachine: any;
   constructor(current: GameState = GameState.Lobby) {
-    console.log("constrcutor");
-    console.log(current);
     try {
       this.statemachine = new StateMachine({
         init: current,

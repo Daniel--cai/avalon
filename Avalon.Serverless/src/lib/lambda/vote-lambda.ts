@@ -7,7 +7,12 @@ const voteHandlerFunction: Handler = async (event, context) => {
   try {
     const command = new VoteCommand();
     const { code, player, success } = JSON.parse(event.body);
-    await command.submitVote({ code, player, success });
+    await command.submitVote({
+      type: "SubmitVoteCommand",
+      code,
+      player,
+      success
+    });
     const ok = {
       statusCode: 200,
       body: JSON.stringify(event.body)

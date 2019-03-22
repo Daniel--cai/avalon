@@ -13,12 +13,10 @@ export class Action {
   @attribute()
   fulfilled: boolean;
 
-  constructor(action?: ActionType, player?: string) {
-    if (action != null) {
-      this.type = action.type;
-      this.payload = JSON.stringify(action);
-      this.player = player;
-      this.fulfilled = false;
-    }
+  constructor() {
+    this.type = "";
+    this.payload = "";
+    this.player = "";
+    this.fulfilled = false;
   }
 }
