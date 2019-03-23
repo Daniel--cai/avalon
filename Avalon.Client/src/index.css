@@ -9,3 +9,11 @@ body {
 tbody {
   overflow: scroll;
 }
+
+.subtitle {
+  color: #929aab;
+  font-size: 1.25rem;
+  letter-spacing: 0.1rem;
+  font-weight: 725;
+  text-align: center;
+}

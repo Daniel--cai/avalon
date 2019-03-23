@@ -67,7 +67,12 @@ export class Lobby extends React.Component<
             })}
           </tbody>
         </table>
-        <button onClick={this.handleClick}>Start</button>
+        <button
+          className="u-full-width button-primary"
+          onClick={this.handleClick}
+        >
+          Start
+        </button>
       </div>
     );
   }

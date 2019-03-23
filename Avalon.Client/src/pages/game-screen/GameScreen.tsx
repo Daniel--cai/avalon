@@ -3,12 +3,14 @@ import { RouteComponentProps } from "react-router-dom";
 import Api from "../../framework/api";
 import { useAsyncEffect } from "../../framework";
 import { Game } from "../../model/Game";
-import { GameBoard } from "../../components/game-board";
 
 import GameStore from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
-import { NominatePlayer, VoteTeam } from "../../components/actions";
+import { VoteTeam } from "../../components/actions";
 import { PlayerSwitcher } from "../../components/test-helpers";
+import { Header } from "../../components/header";
+import { Loading } from "../../components/loading";
+import { PlayerList } from "../../components/player-list";
 
 export const GameScreen = observer(
   (props: RouteComponentProps<{ code: string }>) => {
@@ -37,9 +39,6 @@ export const GameScreen = observer(
         console.log(ex);
       }
     }, []);
-    console.log("isLoaded");
-    console.log(store.loaded);
-    console.log(store.players);
     if (!store.loaded) return <div>Loading...</div>;
     return (
       <div>
@@ -52,7 +51,9 @@ export const GameScreen = observer(
             round: store.round
           }}
         /> */}
-        <NominatePlayer />
+        <Loading />
+        <div className="subtitle">PICK 3 PLAYERS</div>
+        <PlayerList />
         <VoteTeam />
         <PlayerSwitcher players={store.players.map(player => player.name)} />
       </div>

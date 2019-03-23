@@ -1,18 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import Api from "../../framework/api";
 import GameStore from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
+import { Checkbox } from "../checkbox";
+import { Setup } from ".";
 
 interface ReceiveVoteCommand {
   code: string;
   player: string;
   success: boolean;
-}
-
-interface NominatePlayersCommand {
-  code: string;
-  player: string;
-  players: string[];
 }
 
 export const NominatePlayer = observer(() => {
@@ -31,16 +26,6 @@ export const NominatePlayer = observer(() => {
     setSelected(updated);
   };
 
-  const handleNewNomination = async () => {
-    const data: NominatePlayersCommand = {
-      code: store.code,
-      player: store.player,
-      players: selected
-    };
-    const response = await Api.Post("/setup", data);
-    console.log(response);
-  };
-
   return (
     <>
       <table className="u-full-width">
@@ -49,27 +34,23 @@ export const NominatePlayer = observer(() => {
             return (
               <tr key={player.name}>
                 <td>
-                  <label>
-                    <input
-                      type="checkbox"
-                      name={player.name}
-                      checked={selected.includes(player.name)}
-                      onChange={handleSelectOption}
-                      disabled={
-                        selected.length >=
-                          store.missions[store.round - 1].quantity &&
-                        !selected.includes(player.name)
-                      }
-                    />
-                    <span className="label-body"> {player.name}</span>
-                  </label>
+                  <Checkbox
+                    checked={selected.includes(player.name)}
+                    onChange={handleSelectOption}
+                    disabled={
+                      selected.length >=
+                        store.missions[store.round - 1].quantity &&
+                      !selected.includes(player.name)
+                    }
+                    label={player.name}
+                  />
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
-      <button onClick={handleNewNomination}>Setup Command</button>
+      <Setup selected={selected} />
     </>
   );
 });

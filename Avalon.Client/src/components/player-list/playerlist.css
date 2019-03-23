@@ -1,0 +1,11 @@
+.player-list {}
+
+.player-list__item {
+    background: #f6f8fd;
+    padding: 0.5rem;
+    margin: 1rem 0;
+    border-radius: 2px;
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .2);
+    border: #f6f8fd;
+    color: #4f5a6a;
+}

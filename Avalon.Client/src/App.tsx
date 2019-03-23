@@ -8,8 +8,7 @@ import { Lobby } from "./lobby";
 import { GameScreen } from "./pages/game-screen";
 
 import "./App.css";
-import "./styles/normalize.css";
-import "./styles/skeleton.css";
+import { Header } from "./components/header";
 
 class App extends Component {
   constructor(props: any) {
@@ -18,10 +17,13 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="App row">
-          <Route exact path="/" component={Signup} />
-          <Route exact path="/lobby/:code" component={Lobby} />
-          <Route exact path="/game/:code" component={GameScreen} />
+        <div className="App">
+          <Header />
+          <div className="main-body">
+            <Route exact path="/" component={Signup} />
+            <Route exact path="/lobby/:code" component={Lobby} />
+            <Route exact path="/game/:code" component={GameScreen} />
+          </div>
         </div>
       </Router>
     );

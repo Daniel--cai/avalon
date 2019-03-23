@@ -32,7 +32,6 @@
   width: 100%;
   max-width: 960px;
   margin: 0 auto;
-  padding: 0 20px;
   box-sizing: border-box;
 }
 
@@ -169,9 +168,9 @@ body {
   font-size: 1.5em;
   /* currently ems cause chrome bug misinterpreting rems on body element */
   line-height: 1.6;
-  font-weight: 400;
-  font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #222;
+  /* font-weight: 400; */
+  /* font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif; */
+  color: #4f5a6a;
 }
 
 /* Typography
@@ -266,36 +265,37 @@ a:hover {
   padding: 0 30px;
   color: #555;
   text-align: center;
-  font-size: 11px;
   font-weight: 600;
   line-height: 38px;
   letter-spacing: .1rem;
-  text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
-  background-color: transparent;
-  border-radius: 4px;
+  background-color: white;
+  border-radius: 2px;
   border: 1px solid #bbb;
   cursor: pointer;
   box-sizing: border-box;
+  color: #FFF;
+  background-color: #3498db;
+  border-color: #3498db;
 }
 
 .button:hover, button:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover, .button:focus, button:focus, input[type="submit"]:focus, input[type="reset"]:focus, input[type="button"]:focus {
-  color: #333;
-  border-color: #888;
-  outline: 0;
+  color: #FFF;
+  background-color: #2380be;
+  border-color: #2380be;
 }
 
 .button.button-primary, button.button-primary, input[type="submit"].button-primary, input[type="reset"].button-primary, input[type="button"].button-primary {
   color: #FFF;
-  background-color: #33C3F0;
-  border-color: #33C3F0;
+  background-color: #3498db;
+  border-color: #3498db;
 }
 
 .button.button-primary:hover, button.button-primary:hover, input[type="submit"].button-primary:hover, input[type="reset"].button-primary:hover, input[type="button"].button-primary:hover, .button.button-primary:focus, button.button-primary:focus, input[type="submit"].button-primary:focus, input[type="reset"].button-primary:focus, input[type="button"].button-primary:focus {
   color: #FFF;
-  background-color: #1EAEDB;
-  border-color: #1EAEDB;
+  background-color: #2380be;
+  border-color: #2380be;
 }
 
 /* Forms
@@ -307,7 +307,7 @@ input[type="email"], input[type="number"], input[type="search"], input[type="tex
   /* The 6px vertically centers text on FF, ignored by Webkit */
   background-color: #fff;
   border: 1px solid #D1D1D1;
-  border-radius: 4px;
+  border-radius: 2px;
   box-shadow: none;
   box-sizing: border-box;
 }
@@ -387,7 +387,7 @@ code {
   white-space: nowrap;
   background: #F1F1F1;
   border: 1px solid #E1E1E1;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 pre>code {
@@ -499,3 +499,7 @@ there.
 /* Larger than Desktop HD */
 
 @media (min-width: 1200px) {}
+
+.main-body {
+  padding: 0 20px;
+}
