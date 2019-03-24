@@ -11,6 +11,16 @@ import { PlayerSwitcher } from "../../components/test-helpers";
 import { Header } from "../../components/header";
 import { Loading } from "../../components/loading";
 import { PlayerList } from "../../components/player-list";
+import { Progress } from "../../components/progress";
+
+const ActionInfomration = observer((props: { state: string }) => {
+  const store = useContext(GameStore);
+  return (
+    <div className="subtitle">
+      PICK {store.missions[store.round - 1].quantity} PLAYERS
+    </div>
+  );
+});
 
 export const GameScreen = observer(
   (props: RouteComponentProps<{ code: string }>) => {
@@ -51,11 +61,12 @@ export const GameScreen = observer(
             round: store.round
           }}
         /> */}
-        <Loading />
-        <div className="subtitle">PICK 3 PLAYERS</div>
+
+        <Progress />
         <PlayerList />
         <VoteTeam />
         <PlayerSwitcher players={store.players.map(player => player.name)} />
+        <Loading />
       </div>
     );
   }

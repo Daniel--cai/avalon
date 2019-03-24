@@ -1,10 +1,35 @@
 .header {
-    /* background-color: #343f4e; */
-    background-color: #2f3946;
+    background-color: #343f4e;
     color: white;
-    text-align: center;
     height: 5rem;
     line-height: 5rem;
     margin: 0 0 1rem 0;
     font-size: 2rem;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.header__title {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.header__burger-group {
+    padding: 15px 15px 0 15px;
+    width: 20px;
+    background-color: #2f3946;
+}
+
+.header__burger {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    margin: 3px 0;
+    border-radius: 2px;
+}
+
+.header__question {
+    width: 50px;
+    text-align: center;
+    background-color: #2f3946;
 }

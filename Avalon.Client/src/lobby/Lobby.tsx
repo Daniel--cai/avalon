@@ -51,22 +51,15 @@ export class Lobby extends React.Component<
   render() {
     return (
       <div>
-        <table className="u-full-width">
-          <thead>
-            <tr>
-              <th>{this.props.match.params.code}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.players.map((player, index) => {
-              return (
-                <tr key={index}>
-                  <td>{player.name}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="player-list">
+          {this.state.players.map((player, index) => {
+            return (
+              <div key={index} className="player-list__item">
+                {player.name}
+              </div>
+            );
+          })}
+        </div>
         <button
           className="u-full-width button-primary"
           onClick={this.handleClick}

@@ -29,6 +29,9 @@ export const Setup = observer((props: { selected: string[] }) => {
       <button
         className="u-full-width button-primary"
         onClick={handleNewNomination}
+        disabled={
+          props.selected.length !== store.missions[store.round - 1].quantity
+        }
       >
         Setup Command
       </button>

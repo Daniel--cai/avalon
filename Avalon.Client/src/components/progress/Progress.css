@@ -1,0 +1,16 @@
+.progress {
+    display: flex;
+    flex-wrap: nowrap;
+    background: #f6f8fd;
+    padding: 10px;
+}
+
+.progress__bar {
+    flex-grow: 1;
+    background: #ccc;
+    margin: 0 5px;
+}
+
+.progress__bar--active {
+    background: #3498db;
+}

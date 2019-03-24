@@ -17,12 +17,14 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="App">
+        <div className="app ">
           <Header />
-          <div className="main-body">
-            <Route exact path="/" component={Signup} />
-            <Route exact path="/lobby/:code" component={Lobby} />
-            <Route exact path="/game/:code" component={GameScreen} />
+          <div className="container">
+            <div className="row">
+              <Route exact path="/" component={Signup} />
+              <Route exact path="/lobby/:code" component={Lobby} />
+              <Route exact path="/game/:code" component={GameScreen} />
+            </div>
           </div>
         </div>
       </Router>

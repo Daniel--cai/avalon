@@ -55,7 +55,7 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
   render() {
     return (
       <div className="row">
-        <div className="six columns">
+        <div className="columns">
           <label>Name</label>
 
           <input
@@ -98,7 +98,7 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
             </button>
           )}
         </div>
-        <div>{this.state.error}</div>
+        <div className="error">{this.state.error}</div>
       </div>
     );
   }

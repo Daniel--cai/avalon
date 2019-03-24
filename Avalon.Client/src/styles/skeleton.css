@@ -33,6 +33,7 @@
   max-width: 960px;
   margin: 0 auto;
   box-sizing: border-box;
+  padding: 0 20px;
 }
 
 .column, .columns {
@@ -292,10 +293,9 @@ a:hover {
   border-color: #3498db;
 }
 
-.button.button-primary:hover, button.button-primary:hover, input[type="submit"].button-primary:hover, input[type="reset"].button-primary:hover, input[type="button"].button-primary:hover, .button.button-primary:focus, button.button-primary:focus, input[type="submit"].button-primary:focus, input[type="reset"].button-primary:focus, input[type="button"].button-primary:focus {
-  color: #FFF;
-  background-color: #2380be;
-  border-color: #2380be;
+button.button-primary:disabled {
+  background-color: #b8b8bb;
+  border-color: #b8b8bb;
 }
 
 /* Forms
@@ -327,13 +327,13 @@ textarea {
 }
 
 input[type="email"]:focus, input[type="number"]:focus, input[type="search"]:focus, input[type="text"]:focus, input[type="tel"]:focus, input[type="url"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
-  border: 1px solid #33C3F0;
+  border: 1px solid #3498db;
   outline: 0;
 }
 
 label, legend {
   display: block;
-  margin-bottom: .5rem;
+  /* margin-bottom: .5rem; */
   font-weight: 600;
 }
 
@@ -499,7 +499,3 @@ there.
 /* Larger than Desktop HD */
 
 @media (min-width: 1200px) {}
-
-.main-body {
-  padding: 0 20px;
-}

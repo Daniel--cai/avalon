@@ -1,5 +1,12 @@
 import React from "react";
-
+import "./loading.css";
 export const Loading = () => {
-  return <div>5/7</div>;
+  return (
+    <div className="loading-ring">
+      <div />
+      <div />
+      <div />
+      <div />
+    </div>
+  );
 };
