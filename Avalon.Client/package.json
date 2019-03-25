@@ -8,6 +8,7 @@
     "@types/react": "^16.8.2",
     "@types/react-dom": "^16.8.0",
     "@types/socket.io-client": "^1.4.32",
+    "@types/ws": "^6.0.1",
     "axios": "^0.18.0",
     "mobx": "^5.9.0",
     "mobx-react-lite": "^1.1.1",
@@ -15,9 +16,14 @@
     "react-dom": "^16.8.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.3",
+    "rxjs": "^6.4.0",
     "socket.io-client": "^2.2.0",
+    "sockette": "^2.0.5",
+    "sockjs": "^0.3.19",
+    "sockjs-client": "^1.3.0",
     "typescript": "^3.3.3",
-    "use-async-effect": "^2.0.0"
+    "use-async-effect": "^2.0.0",
+    "ws": "^6.2.0"
   },
   "scripts": {
     "start": "set PORT=3001 && react-scripts start",
@@ -35,6 +41,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react-router-dom": "^4.3.1"
+    "@types/react-router-dom": "^4.3.1",
+    "@types/sockjs": "^0.3.31",
+    "@types/sockjs-client": "^1.1.1"
   }
 }

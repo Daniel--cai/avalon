@@ -1,6 +1,4 @@
 import { observable, decorate } from "mobx";
-
-import { Game } from "../model/Game";
 import { Player } from "../model/Player";
 import { createContext } from "react";
 import { Mission } from "../model/Mission";
@@ -13,6 +11,7 @@ export class GameStore {
   player: string = "";
   round: number = 1;
   loaded: boolean = false;
+  message: string = "";
 }
 
 decorate(GameStore, {
@@ -22,7 +21,8 @@ decorate(GameStore, {
   players: observable,
   player: observable,
   round: observable,
-  loaded: observable
+  loaded: observable,
+  message: observable
 });
 
 export default createContext(new GameStore());
