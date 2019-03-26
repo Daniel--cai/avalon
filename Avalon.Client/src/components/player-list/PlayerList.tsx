@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import GameStore from "../../state/GameStore";
+import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
 import { Checkbox } from "../checkbox";
 import { Setup } from "../actions";
@@ -13,7 +13,7 @@ interface ReceiveVoteCommand {
 }
 
 export const PlayerList = observer(() => {
-  const store = useContext(GameStore);
+  const store = useGlobalState();
 
   let array: string[] = [];
   const [selected, setSelected] = useState(array);

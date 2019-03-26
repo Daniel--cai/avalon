@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import GameStore from "../../state/GameStore";
+import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 
 export const PlayerSwitcher = observer((props: Props) => {
   const [selected, setSelected] = useState("");
-  const store = useContext(GameStore);
+  const store = useGlobalState();
 
   const handleSetSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
     store.player = e.target.value;

@@ -1,32 +1,21 @@
-import { useState, useEffect, useContext } from "react";
-import { observer, useObservable } from "mobx-react-lite";
+import { useRef, useEffect, useContext } from "react";
 import EventStore from "../state/EventStore";
-// import WebSocket from "ws";
 
 export const useWebsocket = () => {
   const store = useContext(EventStore);
-  const url = "ws://localhost:50000";
-  const socket = new WebSocket(url);
-
+  const socket = useRef((null as unknown) as WebSocket);
   useEffect(() => {
-    console.log("mount!");
-    return () => {
-      console.log("closing");
-      socket.close();
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log("second effect");
-    socket.onmessage = e => {
+    const url = "ws://localhost:50000";
+    console.log("new socket!");
+    socket.current = new WebSocket(url);
+    socket.current.onmessage = (e: any) => {
       console.log("message!");
       console.log(e.data);
-      store.events.push(e.data);
+      store.events.push(JSON.parse(e.data));
     };
-
-    socket.onopen = e => {
-      console.log("opened!");
-      socket.send("hello");
+    return () => {
+      console.log("closing");
+      socket.current.close();
     };
   }, []);
 };

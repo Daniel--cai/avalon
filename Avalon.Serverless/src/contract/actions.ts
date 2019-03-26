@@ -1,6 +1,7 @@
 export type SelectTeam = {
   type: "SelectTeam";
-  players: string[];
+  player: string;
+  quantity: number;
   round: number;
 };
 export type VoteTeam = {
@@ -10,8 +11,10 @@ export type VoteTeam = {
 };
 export type CompleteTeam = {
   type: "CompleteTeam";
+  players: string[];
   round: number;
 };
+
 export type SelectMerlin = {
   type: "SelectMerlin";
   player: string;

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import Api from "../../framework/api";
-import GameStore from "../../state/GameStore";
+import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
 
 interface ReceiveVoteCommand {
@@ -16,7 +16,7 @@ interface NominatePlayersCommand {
 }
 
 export const VoteTeam = observer(() => {
-  const store = useContext(GameStore);
+  const store = useGlobalState();
 
   const sendVote = (success: boolean) => async () => {
     const data: ReceiveVoteCommand = {

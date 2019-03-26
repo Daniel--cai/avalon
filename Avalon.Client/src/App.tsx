@@ -6,9 +6,10 @@ import { Signup } from "./components/signup";
 
 import { Lobby } from "./lobby";
 import { GameScreen } from "./pages/game-screen";
-
+import { EventHelper } from "./pages/event-helper";
 import "./App.css";
 import { Header } from "./components/header";
+import { Provider } from "./state/GameStore";
 
 class App extends Component {
   constructor(props: any) {
@@ -18,14 +19,17 @@ class App extends Component {
     return (
       <Router>
         <div className="app ">
-          <Header />
-          <div className="container">
-            <div className="row">
-              <Route exact path="/" component={Signup} />
-              <Route exact path="/lobby/:code" component={Lobby} />
-              <Route exact path="/game/:code" component={GameScreen} />
+          <Provider>
+            <Header />
+            <div className="container">
+              <div className="row">
+                <Route exact path="/" component={Signup} />
+                <Route exact path="/lobby/:code" component={Lobby} />
+                <Route exact path="/game/:code" component={GameScreen} />
+                <Route exact path="/test" component={EventHelper} />
+              </div>
             </div>
-          </div>
+          </Provider>
         </div>
       </Router>
     );

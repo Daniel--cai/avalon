@@ -3,7 +3,7 @@ import { RouteComponentProps } from "react-router-dom";
 import Api from "../../framework/api";
 import { Game } from "../../model/Game";
 
-import GameStore from "../../state/GameStore";
+import { useGlobalState, Provider } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
 import { VoteTeam } from "../../components/actions";
 import { PlayerSwitcher } from "../../components/test-helpers";
@@ -13,9 +13,10 @@ import { PlayerList } from "../../components/player-list";
 import { Progress } from "../../components/progress";
 
 import { useWebsocket } from "../../hooks/useWebsocket";
-
+import { useActionHandler } from "../../hooks/useActionHandler";
 const ActionInformation = observer((props: {}) => {
-  const store = useContext(GameStore);
+  const store = useGlobalState();
+  useActionHandler();
   useWebsocket();
   let message = "";
   switch (store.state) {
@@ -37,8 +38,7 @@ const ActionInformation = observer((props: {}) => {
 
 export const GameScreen = observer(
   (props: RouteComponentProps<{ code: string }>) => {
-    const store = useContext(GameStore);
-
+    const store = useGlobalState();
     useEffect(() => {
       async function fetchData() {
         try {
@@ -70,13 +70,11 @@ export const GameScreen = observer(
             round: store.round
           }}
         /> */}
-
+        <PlayerSwitcher players={store.players.map(player => player.name)} />
         <Progress />
         <ActionInformation />
         <PlayerList />
         <VoteTeam />
-        <PlayerSwitcher players={store.players.map(player => player.name)} />
-        <Loading />
       </div>
     );
   }

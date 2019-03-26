@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Api from "../../framework/api";
-import GameStore from "../../state/GameStore";
+import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
 
 interface NominatePlayersCommand {
@@ -10,7 +10,7 @@ interface NominatePlayersCommand {
 }
 
 export const Setup = observer((props: { selected: string[] }) => {
-  const store = useContext(GameStore);
+  const store = useGlobalState();
 
   let array: string[] = [];
 
