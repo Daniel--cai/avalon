@@ -31,7 +31,7 @@ export function actionReducer(state: GameStore, action: any) {
   }
 }
 
-export function actionReducer(state: GameStore, action: any) {
+export function eventReducer(state: GameStore, action: any) {
   console.log("actionReducER!");
   switch (action.type) {
     case "SelectTeam":
