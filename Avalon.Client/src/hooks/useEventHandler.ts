@@ -3,20 +3,8 @@ import EventStore from "../state/EventStore";
 import { useGlobalState, GameStore } from "../state/GameStore";
 import { GameState } from "../model/GameState";
 
-const ActionReducer = (current: any, store: GameStore) => {
-  console.log(current.type, current.type === "SelectTeam");
-  if (current.type === "SelectTeam") {
-    store.state = GameState.Setup;
-  } else if (current.type === "VoteTeam") {
-    store.state = GameState.Voting;
-  } else if (current.type === "CompleteTeam") {
-    store.state = GameState.Mission;
-  } else if (current.type === "SelectMerlin") {
-    store.state = GameState.Merlin;
-  }
-};
-
-function actionReducer(state: GameStore, action: any) {
+export function reducer(state: GameStore, action: any): GameStore {
+  console.log("reducer");
   switch (action.type) {
     case "SelectTeam":
       return {
@@ -38,6 +26,123 @@ function actionReducer(state: GameStore, action: any) {
         ...state,
         state: GameState.Merlin
       };
+
+    case "PlayerConnected":
+      return {
+        ...state,
+        players: [...state.players, action.player]
+      };
+
+    case "PlayerDisconnected":
+      return {
+        ...state,
+        players: state.players.filter(player => player.name === action.player)
+      };
+
+    case "TeamSelected":
+      return {
+        ...state,
+        state: GameState.Voting,
+        missions: state.missions.map((mission, index) => {
+          if (index !== state.round - 1) return mission;
+          debugger;
+          const nominations = [...mission.nominations];
+          nominations[nominations.length - 1].nominees = action.players;
+          nominations[nominations.length - 1].nominator = action.player;
+          return {
+            ...mission,
+            nominations
+          };
+        })
+      };
+
+    case "VoteSubmitted":
+      return {
+        ...state,
+        missions: state.missions.map((mission, index) => {
+          if (index !== state.round - 1) return mission;
+          const nomination = mission.nominations[
+            mission.nominations.length - 1
+          ].votes.push({ player: action.player, succeed: false });
+
+          return {
+            ...mission,
+            nomination
+          };
+        })
+      };
+
+    case "TeamAccepted":
+      return {
+        ...state,
+        state: GameState.Mission
+      };
+
+    case "TeamRejected":
+      return {
+        ...state,
+        state: GameState.Setup
+      };
+
+    case "MissionSubmitted":
+      return {
+        ...state,
+        missions: state.missions.map((mission, index) => {
+          if (index !== state.round - 1) return mission;
+
+          return {
+            ...mission,
+            quest: [
+              ...mission.quest.filter(q => q.player !== action.player),
+              { player: action.player, succeed: false }
+            ]
+          };
+        })
+      };
+
+    case "MissionSucceeded":
+      return {
+        ...state,
+        state: GameState.Setup,
+        round: state.round + 1,
+        missions: state.missions.map((mission, index) => {
+          if (index !== state.round - 1) return mission;
+          return {
+            ...mission,
+            success: true
+          };
+        })
+      };
+
+    case "MissionFailed":
+      return {
+        ...state,
+        state: GameState.Setup,
+        round: state.round + 1,
+        missions: state.missions.map((mission, index) => {
+          if (index !== action.round) return mission;
+          return {
+            ...mission,
+            success: false
+          };
+        })
+      };
+
+    // case "MerlinFound":
+    //   return {
+    //     ...state,
+    //     selected: string,
+    //     merlin: string,
+    //     player: string
+    //   };
+
+    // case "MerlinNotFound":
+    //   return {
+    //     ...state,
+    //     selected: string,
+    //     merlin: string,
+    //     player: string
+    //   };
     default:
       return state;
   }
@@ -49,7 +154,7 @@ export const useEventHandler = () => {
 
   useEffect(() => {
     if (eventStore.events.length === 0) return;
-    gameStore = actionReducer(
+    gameStore = reducer(
       gameStore,
       eventStore.events[eventStore.events.length - 1]
     );

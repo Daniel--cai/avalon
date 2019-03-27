@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
 export const useEventEmitter = () => {
-  console.log("event emitter!");
-  const url = "ws://localhost:50000";
   const socket = useRef((null as unknown) as WebSocket);
   useEffect(() => {
-    console.log("mount!");
+    const url = "ws://localhost:50000";
+    console.log("event emitter!");
+    socket.current = new WebSocket(url);
     console.log("second effect");
     console.log(socket.current);
-    socket.current.onopen = e => {
+    socket.current.onopen = (e: any) => {
       console.log("opened!");
       socket.current.send(JSON.stringify("opened"));
     };

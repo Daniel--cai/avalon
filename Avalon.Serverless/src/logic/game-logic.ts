@@ -2,7 +2,7 @@ import { Game } from "../schema/game";
 import { Nomination } from "../schema/nomination";
 
 export function GetNextNominator(game: Game): string {
-  return "";
+  return game.players[2].name;
 }
 
 export function SetNextNominator(game: Game): Game {

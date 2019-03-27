@@ -32,8 +32,8 @@ export class SetupCommand {
 
     const state = new GameStateMachine(lobby.game.state as GameState);
 
-    lobby.game.GetCurrentMission().GetCurrentNomination().nominator =
-      command.player;
+    // lobby.game.GetCurrentMission().GetCurrentNomination().nominator =
+    //   command.player;
     lobby.game.GetCurrentMission().GetCurrentNomination().nominees =
       command.players;
     state.hydrate(lobby.game);

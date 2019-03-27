@@ -2,7 +2,7 @@ export type StartGameCommand = {
   type: "StartGameCommand";
   code: string;
 };
-export type SubmitTeamCommand = {
+export type SelectTeamCommand = {
   type: "SubmitTeamCommand";
   code: string;
   player: string;
@@ -29,7 +29,7 @@ export type SubmitMerlinCommand = {
 
 export type Command =
   | StartGameCommand
-  | SubmitTeamCommand
+  | SelectTeamCommand
   | SubmitVoteCommand
   | SubmitMissionCommand
   | SubmitMerlinCommand;

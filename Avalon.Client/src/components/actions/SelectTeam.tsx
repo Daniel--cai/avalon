@@ -10,7 +10,7 @@ interface ReceiveVoteCommand {
   success: boolean;
 }
 
-export const NominatePlayer = () => {
+export const SelectTeam = () => {
   const store = useGlobalState();
 
   let array: string[] = [];

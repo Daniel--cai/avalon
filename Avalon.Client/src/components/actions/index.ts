@@ -1,3 +1,4 @@
 export { VoteTeam } from "./VoteTeam";
-export { NominatePlayer } from "./NominatePlayer";
+export { SelectTeam } from "./SelectTeam";
 export { Setup } from "./Setup";
+export { CompleteMission } from "./CompleteMission";

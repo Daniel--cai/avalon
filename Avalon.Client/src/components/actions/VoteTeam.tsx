@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Api from "../../framework/api";
 import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
@@ -9,14 +9,10 @@ interface ReceiveVoteCommand {
   success: boolean;
 }
 
-interface NominatePlayersCommand {
-  code: string;
-  player: string;
-  players: string[];
-}
-
 export const VoteTeam = observer(() => {
   const store = useGlobalState();
+
+  const [disabled, setDisabled] = useState({} as any);
 
   const sendVote = (success: boolean) => async () => {
     const data: ReceiveVoteCommand = {
@@ -25,39 +21,29 @@ export const VoteTeam = observer(() => {
       success
     };
     const response = await Api.Post("/vote", data);
+    const _disabled = { ...disabled };
+    _disabled[store.player] = success ? "Accept" : "Reject";
+    setDisabled(_disabled);
+
     console.log(response);
   };
-
-  const sendQuest = (success: boolean) => async () => {
-    const data: ReceiveVoteCommand = {
-      code: store.code,
-      player: store.player,
-      success: success
-    };
-    const response = await Api.Post("/mission", data);
-    console.log(response);
-  };
-
+  if (store.player == "") return <div />;
   return (
     <>
-      <div className="one-half column">
-        <button className="u-full-width" onClick={sendVote(true)}>
-          Accept
-        </button>
-      </div>
-      <div className="one-half column">
-        <button className="u-full-width" onClick={sendVote(false)}>
-          Reject
-        </button>
-      </div>
-      <div className="one-half column">
-        <button className="u-full-width" onClick={sendQuest(true)}>
-          Success
-        </button>
-        <button className="u-full-width" onClick={sendQuest(false)}>
-          Fail
-        </button>
-      </div>
+      <button
+        className="u-full-width button-primary"
+        onClick={sendVote(true)}
+        disabled={disabled[store.player] == "Accept"}
+      >
+        Accept
+      </button>
+      <button
+        className="u-full-width button-primary"
+        onClick={sendVote(false)}
+        disabled={disabled[store.player] == "Reject"}
+      >
+        Reject
+      </button>
     </>
   );
 });

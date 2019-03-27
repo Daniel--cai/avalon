@@ -13,12 +13,22 @@ export type Event =
       players: string[];
     }
   | {
+      type: "VoteSumitted";
+      player: string;
+      success: boolean;
+    }
+  | {
       type: "TeamAccepted";
       players: string[];
     }
   | {
       type: "TeamRejected";
       players: string[];
+    }
+  | {
+      type: "MissionSumitted";
+      player: string;
+      success: boolean;
     }
   | {
       type: "MissionSucceeded";

@@ -5,15 +5,17 @@ import { Game } from "../../model/Game";
 
 import { useGlobalState, Provider } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
-import { VoteTeam } from "../../components/actions";
+import { VoteTeam, Setup, CompleteMission } from "../../components/actions";
 import { PlayerSwitcher } from "../../components/test-helpers";
 import { Header } from "../../components/header";
 import { Loading } from "../../components/loading";
-import { PlayerList } from "../../components/player-list";
 import { Progress } from "../../components/progress";
 
 import { useWebsocket } from "../../hooks/useWebsocket";
 import { useActionHandler } from "../../hooks/useActionHandler";
+import { EventHelper } from "../event-helper";
+import { PlayerList } from "../../components/player-list";
+import { GameState } from "../../model/GameState";
 const ActionInformation = observer((props: {}) => {
   const store = useGlobalState();
   useActionHandler();
@@ -61,7 +63,6 @@ export const GameScreen = observer(
     if (!store.loaded) return <div>Loading...</div>;
     return (
       <div>
-        <p>State: {store.state}</p>
         {/* <GameBoard
           game={{
             missions: store.missions,
@@ -71,10 +72,13 @@ export const GameScreen = observer(
           }}
         /> */}
         <PlayerSwitcher players={store.players.map(player => player.name)} />
-        <Progress />
+        <p>State: {store.state}</p>
+        {store.state == GameState.Voting && <Progress />}
         <ActionInformation />
-        <PlayerList />
-        <VoteTeam />
+        <br />
+        {store.state == GameState.Voting && <VoteTeam />}
+        {store.state == GameState.Setup && <PlayerList />}
+        {store.state == GameState.Mission && <CompleteMission />}
       </div>
     );
   }

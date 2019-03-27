@@ -27,6 +27,9 @@ export class MissionCommand {
     vote.player = command.player;
     vote.succeed = command.success;
 
+    lobby.game.GetCurrentMission().quest = lobby.game
+      .GetCurrentMission()
+      .quest.filter(q => q.player != command.player);
     lobby.game.GetCurrentMission().quest.push(vote);
 
     console.log("time to transition from Mission!");

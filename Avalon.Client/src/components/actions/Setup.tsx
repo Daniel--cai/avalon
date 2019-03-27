@@ -3,19 +3,13 @@ import Api from "../../framework/api";
 import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
 
-interface NominatePlayersCommand {
-  code: string;
-  player: string;
-  players: string[];
-}
-
 export const Setup = observer((props: { selected: string[] }) => {
   const store = useGlobalState();
 
   let array: string[] = [];
 
   const handleNewNomination = async () => {
-    const data: NominatePlayersCommand = {
+    const data = {
       code: store.code,
       player: store.player,
       players: props.selected
@@ -33,7 +27,7 @@ export const Setup = observer((props: { selected: string[] }) => {
           props.selected.length !== store.missions[store.round - 1].quantity
         }
       >
-        Setup Command
+        Setup
       </button>
     </>
   );
