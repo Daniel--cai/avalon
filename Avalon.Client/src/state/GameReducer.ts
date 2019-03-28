@@ -1,4 +1,6 @@
-import { GameStore } from "./GameStore";
+import { useContext, useEffect, useReducer } from "react";
+import EventStore from "../state/EventStore";
+import { useGlobalState, GameStore } from "../state/GameStore";
 import { GameState } from "../model/GameState";
 import { Nomination } from "../model/Nomination";
 
@@ -116,11 +118,11 @@ export function actionReducer(state: GameStore, action: any): GameStore {
         ...state,
         state: GameState.Mission
       };
-
     case "TeamRejected":
       return {
         ...state,
-        state: GameState.Setup
+        state: GameState.Setup,
+        round: state.round + 1
       };
 
     case "MissionSubmitted":

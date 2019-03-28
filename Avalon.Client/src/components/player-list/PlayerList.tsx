@@ -28,12 +28,16 @@ export const PlayerList = observer(() => {
     setSelected(updated);
   };
 
+  const mission = store.missions[store.round - 1];
   const nominator =
-    store.missions[store.round - 1].nominations[
-      store.missions[store.round - 1].nominations.length - 1
-    ].nominator;
+    mission.nominations[mission.nominations.length - 1].nominator;
 
-  if (store.player != nominator) return <div>Waiting on {nominator} </div>;
+  if (store.player != nominator)
+    return (
+      <div>
+        Currently:{store.player} Waiting on {nominator}{" "}
+      </div>
+    );
   return (
     <>
       <div className="player-list">

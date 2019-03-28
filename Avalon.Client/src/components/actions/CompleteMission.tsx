@@ -27,13 +27,12 @@ export const CompleteMission = observer(() => {
 
   const mission = store.missions[store.round - 1];
 
-  const nomination =
-    mission.nominations[store.missions[store.round - 1].nominations.length - 1];
+  const nomination = mission.nominations[mission.nominations.length - 1];
 
   if (nomination.nominees.indexOf(store.player) == -1)
     return (
       <div>
-        Waiting on players:{" "}
+        Currently: {store.player} Waiting on players:{" "}
         {nomination.nominees
           .filter(
             nominee => mission.quest.map(q => q.player).indexOf(nominee) == -1

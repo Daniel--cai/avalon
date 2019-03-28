@@ -16,6 +16,7 @@ import { useActionHandler } from "../../hooks/useActionHandler";
 import { EventHelper } from "../event-helper";
 import { PlayerList } from "../../components/player-list";
 import { GameState } from "../../model/GameState";
+import { GameBoard } from "../../components/game-board";
 const ActionInformation = observer((props: {}) => {
   const store = useGlobalState();
   useActionHandler();
@@ -63,14 +64,14 @@ export const GameScreen = observer(
     if (!store.loaded) return <div>Loading...</div>;
     return (
       <div>
-        {/* <GameBoard
+        <GameBoard
           game={{
             missions: store.missions,
             state: store.state,
             players: store.players,
             round: store.round
           }}
-        /> */}
+        />
         <PlayerSwitcher players={store.players.map(player => player.name)} />
         <p>State: {store.state}</p>
         {store.state == GameState.Voting && <Progress />}
