@@ -28,7 +28,10 @@ decorate(GameStore, {
 
 const initialState = new GameStore();
 
-const dispatchAction: React.Dispatch<Partial<{ type: string }>> = () => {};
+const dispatchAction: React.Dispatch<{
+  type: string;
+  [key: string]: any;
+}> = () => {};
 const dispatchContext = createContext(dispatchAction);
 const stateContext = createContext(initialState);
 

@@ -39,13 +39,21 @@ export function actionReducer(state: GameStore, action: any): GameStore {
   console.log(action.type);
   switch (action.type) {
     case "SelectTeam":
-      const missions = [...state.missions];
       const nomination: Nomination = {
         nominator: action.player,
         nominees: [],
         votes: []
       };
-      missions[state.round - 1].nominations.push(nomination);
+      const missions = [
+        ...state.missions.slice(-1),
+        {
+          ...state.missions[state.round - 1],
+          nomination: [
+            ...state.missions[state.round - 1].nominations,
+            nomination
+          ]
+        }
+      ];
 
       return {
         ...state,
@@ -161,7 +169,7 @@ export function actionReducer(state: GameStore, action: any): GameStore {
         state: GameState.Setup,
         round: state.round + 1,
         missions: state.missions.map((mission, index) => {
-          if (index !== action.round) return mission;
+          if (index !== state.round) return mission;
           return {
             ...mission,
             success: false
@@ -183,6 +191,11 @@ export function actionReducer(state: GameStore, action: any): GameStore {
     //     merlin: string,
     //     player: string
     //   };
+    case "SetPlayer":
+      return {
+        ...state,
+        player: action.player
+      };
     default:
       return state;
   }

@@ -11,7 +11,7 @@ interface ReceiveVoteCommand {
 
 export const CompleteMission = observer(() => {
   const store = useGlobalState();
-  const [disabled, setDisabled] = useState({} as any);
+  const [disabled, setDisabled] = useState<{ [key: string]: string }>({});
   const sendQuest = (success: boolean) => async () => {
     const data: ReceiveVoteCommand = {
       code: store.code,
@@ -19,9 +19,10 @@ export const CompleteMission = observer(() => {
       success: success
     };
     const response = await Api.Post("/mission", data);
-    const _disabled = { ...disabled };
-    _disabled[store.player] = success ? "Succeed" : "Fail";
-    setDisabled(_disabled);
+    setDisabled(disable => ({
+      ...disable,
+      [store.player]: success ? "Succeed" : "Fail"
+    }));
     console.log(response);
   };
 
@@ -43,6 +44,7 @@ export const CompleteMission = observer(() => {
 
   return (
     <>
+      <p>{store.player}</p>
       <button
         className="u-full-width button-primary"
         onClick={sendQuest(true)}

@@ -12,7 +12,7 @@ interface ReceiveVoteCommand {
 export const VoteTeam = observer(() => {
   const store = useGlobalState();
 
-  const [disabled, setDisabled] = useState({} as any);
+  const [disabled, setDisabled] = useState<{ [key: string]: string }>({});
 
   const sendVote = (success: boolean) => async () => {
     const data: ReceiveVoteCommand = {
@@ -21,15 +21,18 @@ export const VoteTeam = observer(() => {
       success
     };
     const response = await Api.Post("/vote", data);
-    const _disabled = { ...disabled };
-    _disabled[store.player] = success ? "Accept" : "Reject";
-    setDisabled(_disabled);
+
+    setDisabled(disable => ({
+      ...disable,
+      [store.player]: success ? "Accept" : "Reject"
+    }));
 
     console.log(response);
   };
   if (store.player == "") return <div />;
   return (
     <>
+      <p>{store.player}</p>
       <button
         className="u-full-width button-primary"
         onClick={sendVote(true)}

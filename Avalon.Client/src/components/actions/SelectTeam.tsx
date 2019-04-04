@@ -13,8 +13,7 @@ interface ReceiveVoteCommand {
 export const SelectTeam = () => {
   const store = useGlobalState();
 
-  let array: string[] = [];
-  const [selected, setSelected] = useState(array);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const handleSelectOption = (e: React.ChangeEvent<HTMLInputElement>) => {
     let updated = [...selected];
