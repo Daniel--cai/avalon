@@ -3,7 +3,7 @@ import { Vote } from "../schema/vote";
 import { GameState } from "../model/state";
 import { InvalidOperation } from "../lib/error/invalid-operation";
 import { GameStateMachine } from "../state-machine";
-import { SubmitMissionCommand } from "../contract";
+import { SubmitMissionCommand } from "../../../shared/contract";
 
 export class MissionCommand {
   private client: LobbyRepository;

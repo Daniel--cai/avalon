@@ -1,5 +1,5 @@
 import { attribute } from "@aws/dynamodb-data-mapper-annotations";
-import { Event as EventType } from "../contract";
+import { Event as EventType } from "../../../shared/contract";
 
 export class Event {
   @attribute()

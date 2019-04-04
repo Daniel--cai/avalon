@@ -1,5 +1,5 @@
 import { attribute } from "@aws/dynamodb-data-mapper-annotations";
-import { Action as ActionType } from "../contract";
+import { Action as ActionType } from "../../../shared/contract";
 export class Action {
   @attribute()
   type: string;

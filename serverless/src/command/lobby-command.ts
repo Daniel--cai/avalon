@@ -6,7 +6,7 @@ import { GameState } from "../model/state";
 import { InvalidOperation } from "../lib/error/invalid-operation";
 import { GameStateMachine } from "../state-machine";
 import { GetMissionQuantity } from "../logic/game-logic";
-import { StartGameCommand } from "../contract";
+import { StartGameCommand } from "../../../shared/contract";
 
 export class LobbyCommand {
   private client: LobbyRepository;
