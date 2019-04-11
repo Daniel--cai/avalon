@@ -3,6 +3,7 @@ import { Player } from "../model/Player";
 import React, { createContext, useReducer, useContext } from "react";
 import { Mission } from "../model/Mission";
 import { actionReducer } from "./GameReducer";
+import { Message } from "../../../shared/contract";
 
 export class GameStore {
   missions: Mission[] = [];
@@ -28,10 +29,7 @@ decorate(GameStore, {
 
 const initialState = new GameStore();
 
-const dispatchAction: React.Dispatch<{
-  type: string;
-  [key: string]: any;
-}> = () => {};
+const dispatchAction: React.Dispatch<Message> = () => {};
 const dispatchContext = createContext(dispatchAction);
 const stateContext = createContext(initialState);
 

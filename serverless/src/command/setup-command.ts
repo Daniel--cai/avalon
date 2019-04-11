@@ -3,7 +3,7 @@ import { GameState } from "../model/state";
 import { InvalidOperation } from "../lib/error/invalid-operation";
 import { GameStateMachine } from "../state-machine";
 import { Game } from "../schema/game";
-import { SubmitTeamCommand } from "../contract";
+import { SubmitTeamCommand } from "../../../shared/contract";
 
 export class SetupCommand {
   private client: LobbyRepository;

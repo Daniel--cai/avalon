@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Api from "../../framework/api";
 import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
+import { SubmitTeamCommand } from "../../../../shared/contract";
 
 export const Setup = observer((props: { selected: string[] }) => {
   const store = useGlobalState();
@@ -9,7 +10,8 @@ export const Setup = observer((props: { selected: string[] }) => {
   let array: string[] = [];
 
   const handleNewNomination = async () => {
-    const data = {
+    const data: SubmitTeamCommand = {
+      type: "SubmitTeamCommand",
       code: store.code,
       player: store.player,
       players: props.selected

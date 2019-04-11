@@ -38,7 +38,8 @@ class FormBase extends React.Component<Props & RouteComponentProps, State> {
       this.props.history.push(`/lobby/${code}`);
       const connectionId = response.data;
     } catch (error) {
-      this.setState({ error: error.response.data });
+      console.log(error);
+      this.setState({ error: error.response });
     }
   };
 

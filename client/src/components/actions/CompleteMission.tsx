@@ -2,18 +2,14 @@ import React, { useEffect, useState } from "react";
 import Api from "../../framework/api";
 import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
-
-interface ReceiveVoteCommand {
-  code: string;
-  player: string;
-  success: boolean;
-}
+import { SubmitMissionCommand } from "../../../../shared/contract";
 
 export const CompleteMission = observer(() => {
   const store = useGlobalState();
   const [disabled, setDisabled] = useState<{ [key: string]: string }>({});
-  const sendQuest = (success: boolean) => async () => {
-    const data: ReceiveVoteCommand = {
+  const sendMission = (success: boolean) => async () => {
+    const data: SubmitMissionCommand = {
+      type: "SubmitMissionCommand",
       code: store.code,
       player: store.player,
       success: success
@@ -47,14 +43,14 @@ export const CompleteMission = observer(() => {
       <p>{store.player}</p>
       <button
         className="u-full-width button-primary"
-        onClick={sendQuest(true)}
+        onClick={sendMission(true)}
         disabled={disabled[store.player] == "Succeed"}
       >
         Succeed
       </button>
       <button
         className="u-full-width button-primary"
-        onClick={sendQuest(false)}
+        onClick={sendMission(false)}
         disabled={disabled[store.player] == "Fail"}
       >
         Fail

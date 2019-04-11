@@ -1,8 +1,9 @@
 import { observable, decorate } from "mobx";
 import { createContext } from "react";
+import { Message } from "../../../shared/contract";
 
 export class EventStore {
-  events: any[] = [];
+  events: Message[] = [];
 }
 
 decorate(EventStore, { events: observable });

@@ -3,6 +3,7 @@ import EventStore from "../state/EventStore";
 import { useGlobalState, GameStore } from "../state/GameStore";
 import { GameState } from "../model/GameState";
 import { Nomination } from "../model/Nomination";
+import { Message } from "../../../shared/contract";
 
 export function eventReducer(state: GameStore, action: any) {
   console.log("actionReducER!");
@@ -34,7 +35,7 @@ export function eventReducer(state: GameStore, action: any) {
   }
 }
 
-export function actionReducer(state: GameStore, action: any): GameStore {
+export function actionReducer(state: GameStore, action: Message): GameStore {
   console.log("reducer");
   console.log(action.type);
   switch (action.type) {
