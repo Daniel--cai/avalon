@@ -6,7 +6,7 @@ export const Progress = () => {
   const store = useGlobalState();
   const nomination =
     store.missions[store.round - 1].nominations[
-      store.missions[store.round - 1].nominations.length - 1
+      store.missions[store.round - 1].counter
     ];
   return (
     <div className="progress">

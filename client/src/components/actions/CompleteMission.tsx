@@ -24,7 +24,7 @@ export const CompleteMission = observer(() => {
 
   const mission = store.missions[store.round - 1];
 
-  const nomination = mission.nominations[mission.nominations.length - 1];
+  const nomination = mission.nominations[mission.counter];
 
   if (nomination.nominees.indexOf(store.player) == -1)
     return (

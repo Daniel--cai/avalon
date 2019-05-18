@@ -6,11 +6,10 @@ export function GetNextNominator(game: Game): string {
 }
 
 export function SetNextNominator(game: Game): Game {
-  const nomination = new Nomination();
-  {
-    nomination.nominator = GetNextNominator(game);
-  }
-  game.GetCurrentMission().nominations.push(nomination);
+  game.GetCurrentMission().counter = game.GetCurrentMission().counter + 1;
+  game.GetCurrentMission().nominations[
+    game.GetCurrentMission().counter
+  ].nominator = GetNextNominator(game);
   return game;
 }
 

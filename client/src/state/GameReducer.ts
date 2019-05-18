@@ -4,6 +4,7 @@ import { useGlobalState, GameStore } from "../state/GameStore";
 import { GameState } from "../model/GameState";
 import { Nomination } from "../model/Nomination";
 import { Message } from "../../../shared/contract";
+import { Mission } from "../model/Mission";
 
 export function eventReducer(state: GameStore, action: any) {
   console.log("actionReducER!");
@@ -40,19 +41,19 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
   console.log(action.type);
   switch (action.type) {
     case "SelectTeam":
-      const nomination: Nomination = {
-        nominator: action.player,
-        nominees: [],
-        votes: []
-      };
-      const missions = [
+      const currentMission = state.missions[state.round - 1];
+      const missions: Mission[] = [
         ...state.missions.slice(-1),
         {
           ...state.missions[state.round - 1],
-          nomination: [
-            ...state.missions[state.round - 1].nominations,
-            nomination
-          ]
+          nominations: currentMission.nominations.map((nomination, index) => {
+            if (index != currentMission.counter) return nomination;
+            return {
+              nominator: action.player,
+              nominees: [],
+              votes: []
+            };
+          })
         }
       ];
 
@@ -90,6 +91,7 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
       };
 
     case "TeamSelected":
+      if (state.state !== GameState.Setup) return state;
       return {
         ...state,
         state: GameState.Voting,
@@ -97,8 +99,8 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
           if (index !== state.round - 1) return mission;
           debugger;
           const nominations = [...mission.nominations];
-          nominations[nominations.length - 1].nominees = action.players;
-          nominations[nominations.length - 1].nominator = action.player;
+          nominations[mission.counter].nominees = action.players;
+          nominations[mission.counter].nominator = action.player;
           return {
             ...mission,
             nominations
@@ -107,13 +109,15 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
       };
 
     case "VoteSubmitted":
+      if (state.state !== GameState.Voting) return state;
       return {
         ...state,
         missions: state.missions.map((mission, index) => {
           if (index !== state.round - 1) return mission;
-          const nomination = mission.nominations[
-            mission.nominations.length - 1
-          ].votes.push({ player: action.player, succeed: false });
+          const nomination = mission.nominations[mission.counter].votes.push({
+            player: action.player,
+            succeed: false
+          });
 
           return {
             ...mission,
@@ -123,23 +127,34 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
       };
 
     case "TeamAccepted":
+      if (state.state !== GameState.Voting) return state;
       return {
         ...state,
         state: GameState.Mission
       };
     case "TeamRejected":
+      if (state.state !== GameState.Voting) return state;
       return {
         ...state,
         state: GameState.Setup,
-        round: state.round + 1
+        missions: state.missions.map((mission, index) => {
+          if (index !== state.round - 1) return mission;
+          return {
+            ...mission,
+            counter: mission.counter + 1
+          };
+        })
       };
 
     case "MissionSubmitted":
+      if (state.state !== GameState.Mission) {
+        alert("MissionSubmitted rejected. state:Mission !=  " + state.state);
+        return state;
+      }
       return {
         ...state,
         missions: state.missions.map((mission, index) => {
           if (index !== state.round - 1) return mission;
-
           return {
             ...mission,
             quest: [
@@ -151,6 +166,7 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
       };
 
     case "MissionSucceeded":
+      if (state.state !== GameState.Mission) return state;
       return {
         ...state,
         state: GameState.Setup,
@@ -165,6 +181,7 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
       };
 
     case "MissionFailed":
+      if (state.state !== GameState.Mission) return state;
       return {
         ...state,
         state: GameState.Setup,

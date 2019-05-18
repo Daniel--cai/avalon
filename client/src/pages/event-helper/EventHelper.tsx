@@ -69,7 +69,7 @@ export const EventHelper = () => {
           />
         </>
       )}
-      {"TeamSelected VoteTeam CompleteTeam TeamAccepted PlayerDisconnected".includes(
+      {"TeamSelected VoteTeam CompleteTeam TeamAccepted PlayerDisconnected MissionSubmitted".includes(
         option
       ) && (
         <>

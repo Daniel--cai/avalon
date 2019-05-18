@@ -5,12 +5,13 @@ import { Nomination } from "../schema/nomination";
 function onLeaveLobby() {
   const game: Game = this.data;
   console.log("state lifecycle: onSetup");
-  const nominator = GetNextNominator(this.data);
   const nomination = new Nomination();
   {
-    nomination.nominator = nominator;
+    nomination.nominator = GetNextNominator(this.data);
   }
-  game.GetCurrentMission().nominations.push(nomination);
+  game.GetCurrentMission().nominations[
+    game.GetCurrentMission().counter
+  ] = nomination;
 }
 
 export const LobbyStateMethods = (() => {

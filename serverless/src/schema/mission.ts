@@ -17,16 +17,26 @@ export class Mission {
   @attribute()
   twoFails: boolean;
 
+  @attribute()
+  counter: number;
+
   constructor() {
     this.success = null;
-    this.nominations = [];
+    this.nominations = [
+      new Nomination(),
+      new Nomination(),
+      new Nomination(),
+      new Nomination(),
+      new Nomination()
+    ];
     this.quest = [];
     this.quantity = 0;
     this.twoFails = false;
+    this.counter = 0;
   }
 
   GetCurrentNomination() {
-    return this.nominations[this.nominations.length - 1];
+    return this.nominations[this.counter];
   }
 
   GetCurrentQuest() {

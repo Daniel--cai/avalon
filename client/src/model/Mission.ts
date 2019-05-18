@@ -7,4 +7,5 @@ export interface Mission {
   quest: Vote[];
   round: number;
   quantity: number;
+  counter: number;
 }
