@@ -2,7 +2,7 @@ import { Handler } from "aws-lambda";
 
 import { LobbyCommand } from "../../command";
 import { LobbyQuery } from "../../query/lobby-query";
-import { NotFoundError } from "../../lib/error/not-found-error";
+import { NotFoundError } from "../error/not-found-error";
 
 export const lobbyCreateHandler: Handler = async (event, context) => {
   try {
@@ -97,13 +97,9 @@ export const connectionLobby: Handler = async (event, context) => {
   } else if (event.requestContext.eventType === "DISCONNECT") {
     console.log("conection disconnected!");
   }
+  console.log(event.requestContext.connectionId);
   const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "Go Serverless v1.0! Your function executed successfully!",
-      input: event,
-      context: context
-    })
+    statusCode: 200
   };
 
   return response;

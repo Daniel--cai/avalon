@@ -32,15 +32,18 @@ provider:
         - "sns:Publish"
       Resource:
         - ${self:custom.myTopic}
-websocketApiRouteSelectionExpression: $request.body.action
-
+  websocketApiRouteSelectionExpression: $request.body.action
 functions:
   connectionLobby:
     handler: src/lib/lambda/lobby-lambda.connectionLobby
     events:
-      - http:
-          path: connection
-          method: get
+      - websocket:
+          route: $connect
+      - websocket:
+          route: $default
+      - websocket:
+          route: $disconnect
+
   lobbyCreateCommand:
     handler: src/lib/lambda/lobby-lambda.lobbyCreateHandler
     events:
