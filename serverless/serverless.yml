@@ -34,15 +34,13 @@ provider:
         - ${self:custom.myTopic}
   websocketApiRouteSelectionExpression: $request.body.action
 functions:
-  connectionLobby:
-    handler: src/lib/lambda/lobby-lambda.connectionLobby
-    events:
-      - websocket:
-          route: $connect
-      - websocket:
-          route: $default
-      - websocket:
-          route: $disconnect
+  # connectionLobby:
+  #   handler: src/lib/lambda/lobby-lambda.connectionLobby
+  #   events:
+  #     - websocket:
+  #         route: $default
+  #     - websocket:
+  #         route: $disconnect
 
   lobbyCreateCommand:
     handler: src/lib/lambda/lobby-lambda.lobbyCreateHandler
@@ -59,9 +57,9 @@ functions:
   lobbyJoinCommand:
     handler: src/lib/lambda/lobby-lambda.lobbyJoinHandler
     events:
-      - http:
-          path: lobby/join
-          method: post
+      - websocket:
+          route: $connect
+
   gameGetQuery:
     handler: src/lib/lambda/game-lambda.gameGetHandler
     events:

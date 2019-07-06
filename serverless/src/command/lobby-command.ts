@@ -7,12 +7,11 @@ import { InvalidOperation } from "../lib/error/invalid-operation";
 import { GameStateMachine } from "../state-machine";
 import { GetMissionQuantity } from "../logic/game-logic";
 import { StartGameCommand } from "../../../shared/contract";
+import { Command } from "./base-command";
 
-export class LobbyCommand {
-  private client: LobbyRepository;
-
+export class LobbyCommand extends Command {
   constructor() {
-    this.client = new LobbyRepository();
+    super();
   }
 
   async createLobby() {
@@ -43,14 +42,23 @@ export class LobbyCommand {
     return lobby.game;
   }
 
-  async joinLobby(code: string, player: string) {
+  async joinLobby(code: string, player: string, connectionId: string) {
     const lobby = await this.client.getByCode(code);
-    const playerModel = new Player();
 
-    playerModel.name = player;
-    playerModel.number = lobby.getNumberOfPlayers();
-    playerModel.connectionId = "thlkjslf";
-    lobby.players.push(playerModel);
+    const exist = lobby.players.find(p => p.name === player);
+    if (exist == null) {
+      console.log("new player", player);
+      const playerModel = new Player();
+      playerModel.name = player;
+      playerModel.number = lobby.getNumberOfPlayers();
+      playerModel.connectionId = connectionId;
+      lobby.players.push(playerModel);
+    } else {
+      console.log("existing player", player);
+      exist.connectionId = connectionId;
+    }
+
+    const connectionIds = lobby.players.map(player => player.connectionId);
 
     // const message: LobbyJoinMessage = {
     //   type: "LobbyJoinMessage",
@@ -60,5 +68,13 @@ export class LobbyCommand {
 
     // lobby.events.push(message);
     await this.client.update(lobby);
+    console.log("listing connectionIds");
+    console.log(connectionIds);
+    console.log("publihsing first message");
+
+    await this.notifier.publish({
+      data: { type: "PlayerConnected", player },
+      connectionId: connectionIds
+    });
   }
 }

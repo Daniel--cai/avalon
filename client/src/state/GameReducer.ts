@@ -37,29 +37,25 @@ export function eventReducer(state: GameStore, action: any) {
 }
 
 export function actionReducer(state: GameStore, action: Message): GameStore {
-  console.log("reducer");
   console.log(action.type);
+  console.log("actionReducer");
   switch (action.type) {
     case "SelectTeam":
-      const currentMission = state.missions[state.round - 1];
-      const missions: Mission[] = [
-        ...state.missions.slice(-1),
-        {
-          ...state.missions[state.round - 1],
-          nominations: currentMission.nominations.map((nomination, index) => {
-            if (index != currentMission.counter) return nomination;
-            return {
-              nominator: action.player,
-              nominees: [],
-              votes: []
-            };
-          })
-        }
-      ];
+      debugger;
+      if (state.state !== GameState.Setup) return state;
+      const missions = state.missions.map((mission, index) => {
+        if (index !== state.round - 1) return mission;
+        debugger;
+        const nominations = [...mission.nominations];
+        nominations[mission.counter].nominator = action.player;
+        return {
+          ...mission,
+          nominations
+        };
+      });
 
       return {
         ...state,
-        state: GameState.Setup,
         missions
       };
     case "VoteTeam":
@@ -79,6 +75,7 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
       };
 
     case "PlayerConnected":
+      console.log("playerconnected");
       return {
         ...state,
         players: [...state.players, action.player]
@@ -139,6 +136,7 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
         state: GameState.Setup,
         missions: state.missions.map((mission, index) => {
           if (index !== state.round - 1) return mission;
+          debugger;
           return {
             ...mission,
             counter: mission.counter + 1
@@ -187,7 +185,7 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
         state: GameState.Setup,
         round: state.round + 1,
         missions: state.missions.map((mission, index) => {
-          if (index !== state.round) return mission;
+          if (index !== state.round - 1) return mission;
           return {
             ...mission,
             success: false

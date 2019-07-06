@@ -5,6 +5,7 @@ import { LobbyQuery } from "../../query/lobby-query";
 import { NotFoundError } from "../error/not-found-error";
 
 export const lobbyCreateHandler: Handler = async (event, context) => {
+  console.log("create");
   try {
     const lobby = new LobbyCommand();
     const code = await lobby.createLobby();
@@ -22,19 +23,30 @@ export const lobbyCreateHandler: Handler = async (event, context) => {
   }
 };
 
-export const lobbyJoinHandler: Handler = async (event, context) => {
-  const lobby = new LobbyCommand();
-  const { code, player } = JSON.parse(event.body);
+export const lobbyConnectHandler: Handler = async (event, context) => {
+  console.log("connect");
+  const success = {
+    statusCode: 200
+  };
+  return success;
+};
 
+export const lobbyJoinHandler: Handler = async (event, context) => {
   try {
-    await lobby.joinLobby(code, player);
-    await lobby.joinLobby(code, "player1");
-    await lobby.joinLobby(code, "player2");
-    await lobby.joinLobby(code, "player3");
-    await lobby.joinLobby(code, "player4");
+    console.log("joined!");
+    console.log("querystring");
+    console.log(event.queryStringParameters.code);
+    console.log(event.queryStringParameters.player);
+    const lobby = new LobbyCommand();
+    console.log(event.apiGatewayUrl);
+    console.log("join");
+    const { code, player } = event.queryStringParameters;
+    const { code2, player2 } = event.queryStringParameters;
+    await lobby.joinLobby(code, player, event.requestContext.connectionId);
+
+    console.log("finish");
     const success = {
-      statusCode: 200,
-      body: JSON.stringify(code)
+      statusCode: 200
     };
     return success;
   } catch (ex) {
@@ -42,10 +54,10 @@ export const lobbyJoinHandler: Handler = async (event, context) => {
       console.log(404);
       return {
         statusCode: 404,
-        body: JSON.stringify(`Cannot find lobby ${code}`)
+        body: JSON.stringify(`Cannot find lobby`)
       };
     } else {
-      console.log(500);
+      console.log(ex);
       return {
         statusCode: 500,
         body: JSON.stringify(ex.message)
@@ -94,8 +106,12 @@ export const connectionLobby: Handler = async (event, context) => {
   console.log("connected");
   if (event.requestContext.eventType === "CONNECT") {
     console.log("conection connected!");
+    const lobby = new LobbyCommand();
+    // lobby.connectLobby(event.requestContext.connectionId);
   } else if (event.requestContext.eventType === "DISCONNECT") {
     console.log("conection disconnected!");
+  } else {
+    console.log(event.requestContext);
   }
   console.log(event.requestContext.connectionId);
   const response = {

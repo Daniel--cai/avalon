@@ -29,8 +29,7 @@ export const PlayerList = observer(() => {
   };
 
   const mission = store.missions[store.round - 1];
-  const nominator =
-    mission.nominations[mission.nominations.length - 1].nominator;
+  const nominator = mission.nominations[mission.counter].nominator;
 
   if (store.player != nominator)
     return (

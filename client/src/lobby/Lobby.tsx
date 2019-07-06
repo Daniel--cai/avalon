@@ -1,72 +1,73 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect, useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import Api from "../framework/api";
 import { Game } from "../model/Game";
+import queryString from "query-string";
+import { useWebsocket } from "../hooks/useWebsocket";
+import EventStore from "../state/EventStore";
+import { observer } from "mobx-react-lite";
 interface Player {
   connectionId: string;
   name: string;
   number: number;
 }
 
-interface State {
-  players: Player[];
-}
+type TParams = { code: string; name: string };
 
-type TParams = { code: string };
+export const Lobby = observer((props: RouteComponentProps<TParams>) => {
+  const [players, setPlayers] = useState([] as Player[]);
+  const values = queryString.parse(props.location.search) as any;
+  const [connect, sendMessage] = useWebsocket();
+  const store = useContext(EventStore);
 
-export class Lobby extends React.Component<
-  RouteComponentProps<TParams>,
-  State
-> {
-  constructor(props: RouteComponentProps<TParams>) {
-    super(props);
-    this.state = {
-      players: []
-    };
-  }
-
-  async componentDidMount() {
-    const players = await Api.get(
-      `/lobby/${this.props.match.params.code}/players`
+  useEffect(() => {
+    connect(
+      props.match.params.code,
+      values.name
     );
-    console.log(players.data);
-    this.setState({ players: players.data });
-  }
+    console.log(store.events.length);
+  }, []);
+  useEffect(() => {
+    console.log("update:", store.events.length);
+    async function getPlayers() {
+      const players = await Api.get(
+        `/lobby/${props.match.params.code}/players`
+      );
+      console.log(players.data);
+      setPlayers(players.data);
+    }
+    getPlayers();
+  }, [store.events.length]);
 
-  handleClick = async () => {
+  const handleClick = async () => {
     console.log("onClick");
     const data = {
-      code: this.props.match.params.code
+      code: props.match.params.code
     };
     try {
       const response = await Api.Post("/game", data);
       const game: Game = response.data;
-      this.props.history.push(`/game/${this.props.match.params.code}`);
+      props.history.push(`/game/${props.match.params.code}`);
       console.log(response.data);
     } catch (ex) {
       console.log(ex);
     }
   };
 
-  render() {
-    return (
-      <div>
-        <div className="player-list">
-          {this.state.players.map((player, index) => {
-            return (
-              <div key={index} className="player-list__item">
-                {player.name}
-              </div>
-            );
-          })}
-        </div>
-        <button
-          className="u-full-width button-primary"
-          onClick={this.handleClick}
-        >
-          Start
-        </button>
+  return (
+    <div>
+      <div className="player-list">
+        {players.map((player, index) => {
+          return (
+            <div key={index} className="player-list__item">
+              {player.name}
+            </div>
+          );
+        })}
       </div>
-    );
-  }
-}
+      <button className="u-full-width button-primary" onClick={handleClick}>
+        Start
+      </button>
+    </div>
+  );
+});

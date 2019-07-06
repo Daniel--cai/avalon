@@ -9,16 +9,18 @@
     "@types/react-dom": "^16.8.0",
     "@types/socket.io-client": "^1.4.32",
     "@types/ws": "^6.0.1",
+    "aws-sdk": "^2.480.0",
     "axios": "^0.18.0",
     "mobx": "^5.9.0",
     "mobx-react-lite": "^1.1.1",
+    "query-string": "^6.8.1",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.3",
     "rxjs": "^6.4.0",
     "socket.io-client": "^2.2.0",
-    "sockette": "^2.0.5",
+    "sockette": "^2.0.6",
     "sockjs": "^0.3.19",
     "sockjs-client": "^1.3.0",
     "typescript": "^3.3.3",
@@ -26,7 +28,7 @@
     "ws": "^6.2.0"
   },
   "scripts": {
-    "start": "set PORT=3001 && react-scripts start",
+    "start": "set PORT=3002 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

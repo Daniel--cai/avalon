@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 export const useEventEmitter = () => {
   const socket = useRef((null as unknown) as WebSocket);
   useEffect(() => {
-    const url = "ws://localhost:50000";
+    const url = "localhost:3001";
     console.log("event emitter!");
     socket.current = new WebSocket(url);
     console.log("second effect");

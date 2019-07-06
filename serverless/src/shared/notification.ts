@@ -1,12 +1,13 @@
 import { LobbyRepository } from "./client";
 import * as AWS from "aws-sdk";
+import { ApiGatewayManagementApi } from "serverless-offline";
 
 export class Notification {
   private api: AWS.ApiGatewayManagementApi;
   private lobby: LobbyRepository;
 
   constructor() {
-    this.api = new AWS.ApiGatewayManagementApi({
+    this.api = new ApiGatewayManagementApi({
       apiVersion: "2018-11-29",
       endpoint: process.env.ENDPOINT
     });

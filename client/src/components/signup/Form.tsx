@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 
 import { RouteComponentProps, withRouter } from "react-router-dom";
-
+import Sockette from "sockette";
 import Api from "../../framework/api";
 import "./Form.css";
+import { useWebsocket } from "../../hooks/useWebsocket";
 
 interface State {
   name: string;
@@ -13,96 +14,97 @@ interface State {
 
 interface Props {}
 
-class FormBase extends React.Component<Props & RouteComponentProps, State> {
-  state = {
-    name: "",
-    code: "",
-    error: ""
-  };
+const FormBase = (props: Props & RouteComponentProps) => {
+  const [name, setName] = useState("");
+  let [code, setCode] = useState("");
+  let [error, setError] = useState("");
 
-  handleCreate = async () => {
+  async function handleCreate() {
     const data = {};
     const response = await Api.Post("/lobby", data);
     const code = response.data;
-    await this.joinGame(code);
-  };
+    await joinGame(code);
+  }
 
-  joinGame = async (code: string) => {
+  async function joinGame(code: string) {
     const data = {
       code: code,
-      player: this.state.name
+      player: name
     };
     try {
-      const response = await Api.Post("/lobby/join", data);
-      const code = response.data;
-      this.props.history.push(`/lobby/${code}`);
-      const connectionId = response.data;
+      // await this.socketConnect(code);
+      // const response = await Api.Post("/lobby/join", data);
+      // const code = response.data;
+      props.history.push(`/lobby/${code}?name=${name}`);
+      // const connectionId = response.data;
     } catch (error) {
       console.log(error);
-      this.setState({ error: error.response });
+      debugger;
+      setError(error.response);
     }
-  };
-
-  handleClick = async () => {
-    await this.joinGame(this.state.code);
-  };
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ ...this.state, [event.target.name]: event.target.value });
-  };
-  isJoinDisabled = () => {
-    return this.state.name.trim() === "";
-  };
-
-  render() {
-    return (
-      <div className="row">
-        <div className="columns">
-          <label>Name</label>
-
-          <input
-            name="name"
-            className="u-full-width"
-            placeholder="Bob Smith"
-            value={this.state.name}
-            onChange={this.handleChange}
-            type="text"
-          />
-          <div className="row">
-            <label>Code</label>
-            <input
-              name="code"
-              type="text"
-              className="u-full-width"
-              value={this.state.code}
-              maxLength={4}
-              placeholder="bob@example.com"
-              onChange={this.handleChange}
-            />
-          </div>
-        </div>
-        <div className="fieldset">
-          {this.state.code === "" && (
-            <button
-              onClick={this.handleCreate}
-              className="button-primary u-full-width"
-            >
-              Create
-            </button>
-          )}
-          {this.state.code !== "" && (
-            <button
-              className="button-primary u-full-width "
-              onClick={this.handleClick}
-              disabled={this.isJoinDisabled()}
-            >
-              Join
-            </button>
-          )}
-        </div>
-        <div className="error">{this.state.error}</div>
-      </div>
-    );
   }
-}
+
+  async function handleClick() {
+    await joinGame(code);
+  }
+  async function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (event.target.name == "name") setName(event.target.value);
+    else if (event.target.name == "code") setCode(event.target.value);
+    else console.log("handleChange not handled");
+    // this.setState({ ...this.state, [event.target.name]: event.target.value });
+  }
+  function isJoinDisabled() {
+    return name.trim() === "";
+  }
+
+  return (
+    <div className="row">
+      <div className="columns">
+        <label>Name</label>
+
+        <input
+          name="name"
+          className="u-full-width"
+          placeholder="Bob Smith"
+          value={name}
+          onChange={handleChange}
+          type="text"
+        />
+        <div className="row">
+          <label>Code</label>
+          <input
+            name="code"
+            type="text"
+            className="u-full-width"
+            value={code}
+            maxLength={4}
+            placeholder="bob@example.com"
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+      <div className="fieldset">
+        {code === "" && (
+          <button
+            onClick={handleCreate}
+            className="button-primary u-full-width"
+          >
+            Create
+          </button>
+        )}
+        {code !== "" && (
+          <button
+            className="button-primary u-full-width "
+            onClick={handleClick}
+            disabled={isJoinDisabled()}
+          >
+            Join
+          </button>
+        )}
+      </div>
+      <div className="error">{error}</div>
+    </div>
+  );
+};
 
 export const Form = withRouter(FormBase);

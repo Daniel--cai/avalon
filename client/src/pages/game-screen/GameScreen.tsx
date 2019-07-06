@@ -20,14 +20,18 @@ import { GameBoard } from "../../components/game-board";
 const ActionInformation = observer((props: {}) => {
   const store = useGlobalState();
   useActionHandler();
-  useWebsocket();
+  // useWebsocket(store.code, store.player);
   let message = "";
+  const currentMission = store.missions[store.round - 1];
+  const currentRound = currentMission.nominations[currentMission.counter];
   switch (store.state) {
     case "setup":
-      message = `PICK ${store.missions[store.round - 1].quantity} PLAYERS`;
+      message = `PICK ${currentMission.quantity} PLAYERS`;
       break;
     case "voting":
-      message = `ACCEPT OR REJECT THE PLAYERS`;
+      message = `ACCEPT OR REJECT THE PLAYERS: ${currentRound.nominees.join(
+        ","
+      )}`;
       break;
     case "mission":
       message = `SUCCEED OR FAIL THE QUEST`;

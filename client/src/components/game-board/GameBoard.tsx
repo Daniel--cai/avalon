@@ -9,6 +9,10 @@ export const GameBoard = (props: Props) => {
   return (
     <>
       Round: {props.game.round}
+      <br />
+      State: {props.game.state}
+      <br />
+      Counter: {props.game.missions[props.game.round - 1].counter}
       <table className="u-full-width">
         <thead>
           <tr>
@@ -32,7 +36,7 @@ export const GameBoard = (props: Props) => {
                   {mission.nominations.map((nomination, index) => {
                     return (
                       <>
-                        {nomination.nominator} ({index})->
+                        ({index}){nomination.nominator} ->
                         {nomination.votes.map(
                           vote => `${vote.player}:${vote.succeed}, `
                         )}

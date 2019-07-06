@@ -11,29 +11,24 @@ import "./App.css";
 import { Header } from "./components/header";
 import { Provider } from "./state/GameStore";
 
-class App extends Component {
-  constructor(props: any) {
-    super(props);
-  }
-  render() {
-    return (
-      <Router>
-        <div className="app ">
-          <Provider>
-            <Header />
-            <div className="container">
-              <div className="row">
-                <Route exact path="/" component={Signup} />
-                <Route exact path="/lobby/:code" component={Lobby} />
-                <Route exact path="/game/:code" component={GameScreen} />
-                <Route exact path="/test" component={EventHelper} />
-              </div>
+export const App = (props: any) => {
+  return (
+    <Router>
+      <div className="app ">
+        <Provider>
+          <Header />
+          <div className="container">
+            <div className="row">
+              <Route exact path="/" component={Signup} />
+              <Route exact path="/lobby/:code" component={Lobby} />
+              <Route exact path="/game/:code" component={GameScreen} />
+              <Route exact path="/test" component={EventHelper} />
             </div>
-          </Provider>
-        </div>
-      </Router>
-    );
-  }
-}
+          </div>
+        </Provider>
+      </div>
+    </Router>
+  );
+};
 
 export default App;
