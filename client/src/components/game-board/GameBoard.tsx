@@ -35,13 +35,13 @@ export const GameBoard = (props: Props) => {
                 <td>
                   {mission.nominations.map((nomination, index) => {
                     return (
-                      <>
+                      <React.Fragment key={index}>
                         ({index}){nomination.nominator} ->
                         {nomination.votes.map(
                           vote => `${vote.player}:${vote.succeed}, `
                         )}
                         <br />
-                      </>
+                      </React.Fragment>
                     );
                   })}
                 </td>

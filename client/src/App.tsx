@@ -1,17 +1,15 @@
-import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import logo from "./logo.svg";
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
 import { Signup } from "./components/signup";
 
-import { Lobby } from "./lobby";
-import { GameScreen } from "./pages/game-screen";
+import { GameView } from "./pages/game-view";
 import { EventHelper } from "./pages/event-helper";
 import "./App.css";
 import { Header } from "./components/header";
 import { Provider } from "./state/GameStore";
 
-export const App = (props: any) => {
+export const App = () => {
   return (
     <Router>
       <div className="app ">
@@ -20,8 +18,11 @@ export const App = (props: any) => {
           <div className="container">
             <div className="row">
               <Route exact path="/" component={Signup} />
-              <Route exact path="/lobby/:code" component={Lobby} />
-              <Route exact path="/game/:code" component={GameScreen} />
+              <Route
+                exact
+                path="/lobby/:code/name/:name"
+                component={GameView}
+              />
               <Route exact path="/test" component={EventHelper} />
             </div>
           </div>

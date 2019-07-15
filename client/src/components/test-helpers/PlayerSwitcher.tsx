@@ -20,8 +20,8 @@ export const PlayerSwitcher = observer((props: Props) => {
     <>
       <select name="name" value={selected} onChange={handleSetSelected}>
         <option value="none" disabled />
-        {props.players.map(player => (
-          <option value={player} key={player}>
+        {props.players.map((player, index) => (
+          <option value={player} key={index}>
             {player}
           </option>
         ))}

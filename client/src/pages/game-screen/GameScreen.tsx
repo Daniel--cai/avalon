@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import Api from "../../framework/api";
 import { Game } from "../../model/Game";
 
@@ -43,48 +43,51 @@ const ActionInformation = observer((props: {}) => {
   return <div className="subtitle">{message}</div>;
 });
 
-export const GameScreen = observer(
-  (props: RouteComponentProps<{ code: string }>) => {
-    const store = useGlobalState();
-    useEffect(() => {
-      async function fetchData() {
-        try {
-          store.code = "";
-          const response = await Api.get(`/game/${props.match.params.code}`);
-          console.log(response);
-          const game: Game = response.data;
-          store.missions = game.missions;
-          store.state = game.state;
-          store.code = props.match.params.code;
-          store.loaded = true;
-          store.round = game.round;
-          store.players = game.players;
-        } catch (ex) {
-          store.loaded = false;
-        }
+interface GameScreenProps {
+  code: string;
+  name: string;
+}
+
+export const GameScreen = observer((props: GameScreenProps) => {
+  const store = useGlobalState();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        store.code = "";
+        const response = await Api.get(`/game/${props.code}`);
+        console.log(response);
+        const game: Game = response.data;
+        store.missions = game.missions;
+        store.state = game.state;
+        store.code = props.code;
+        store.loaded = true;
+        store.round = game.round;
+        store.players = game.players;
+      } catch (ex) {
+        store.loaded = false;
       }
-      fetchData();
-    }, []);
-    if (!store.loaded) return <div>Loading...</div>;
-    return (
-      <div>
-        <GameBoard
-          game={{
-            missions: store.missions,
-            state: store.state,
-            players: store.players,
-            round: store.round
-          }}
-        />
-        <PlayerSwitcher players={store.players.map(player => player.name)} />
-        <p>State: {store.state}</p>
-        {store.state == GameState.Voting && <Progress />}
-        <ActionInformation />
-        <br />
-        {store.state == GameState.Voting && <VoteTeam />}
-        {store.state == GameState.Setup && <PlayerList />}
-        {store.state == GameState.Mission && <CompleteMission />}
-      </div>
-    );
-  }
-);
+    }
+    fetchData();
+  }, []);
+  if (!store.loaded) return <div>Loading...</div>;
+  return (
+    <div>
+      <GameBoard
+        game={{
+          missions: store.missions,
+          state: store.state,
+          players: store.players,
+          round: store.round
+        }}
+      />
+      <PlayerSwitcher players={store.players.map(player => player.name)} />
+      <p>State: {store.state}</p>
+      {store.state == GameState.Voting && <Progress />}
+      <ActionInformation />
+      <br />
+      {store.state == GameState.Voting && <VoteTeam />}
+      {store.state == GameState.Setup && <PlayerList />}
+      {store.state == GameState.Mission && <CompleteMission />}
+    </div>
+  );
+});

@@ -3,7 +3,7 @@ import { createContext } from "react";
 import { Message } from "../../../shared/contract";
 
 export class EventStore {
-  events: Message[] = [];
+  events: any[] = [];
 }
 
 decorate(EventStore, { events: observable });

@@ -35,7 +35,7 @@ const FormBase = (props: Props & RouteComponentProps) => {
       // await this.socketConnect(code);
       // const response = await Api.Post("/lobby/join", data);
       // const code = response.data;
-      props.history.push(`/lobby/${code}?name=${name}`);
+      props.history.push(`/lobby/${code}/name/${name}`);
       // const connectionId = response.data;
     } catch (error) {
       console.log(error);

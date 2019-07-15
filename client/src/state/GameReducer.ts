@@ -75,7 +75,6 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
       };
 
     case "PlayerConnected":
-      console.log("playerconnected");
       return {
         ...state,
         players: [...state.players, action.player]

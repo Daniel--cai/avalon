@@ -1,4 +1,11 @@
-import { useRef, useEffect, useContext, useState } from "react";
+import {
+  useRef,
+  useEffect,
+  useContext,
+  useState,
+  useCallback,
+  useMemo
+} from "react";
 import EventStore from "../state/EventStore";
 import Sockette from "sockette";
 
@@ -7,59 +14,53 @@ export interface ConnectionRequest {
   name: string;
 }
 
-export const useWebsocket = () => {
-  const store = useContext(EventStore);
+export enum SocketState {
+  IDLE,
+  CONNECTING,
+  RECONNECTING,
+  OPEN,
+  CLOSE,
+  ERROR
+}
+
+export const useWebsocket = (url: string) => {
   const socket = useRef((null as unknown) as Sockette);
-
-  const [connection, setConnection] = useState(
-    (null as unknown) as ConnectionRequest
-  );
-  function sendMessage(data: any) {
-    return socket.current.send(data);
-  }
-
-  function connect(code: string, name: string) {
-    console.log("setting connection");
-    setConnection({ code, name });
-  }
+  const [socketState, setSocketState] = useState(SocketState.IDLE);
+  const [lastMessage, setLastMessage] = useState(null as any);
+  const sendMessage = useCallback((data: any) => {
+    socket.current && socket.current.send(data);
+  }, []);
+  const convertedUrl = useMemo(() => {
+    return url;
+  }, [url]);
 
   useEffect(() => {
-    console.log("first useeffect:", connection);
-    if (connection !== null) {
-      console.log("connection not null!");
-      const url = `ws://localhost:3001?code=${connection.code}&player=${
-        connection.name
-      }`;
-      console.log("new socket!");
-      socket.current = new Sockette(url, {
+    if (convertedUrl != "") {
+      socket.current = new Sockette(convertedUrl, {
         timeout: 5e3,
         maxAttempts: 1,
         onopen: e => {
-          console.log("connected:", e);
+          setSocketState(SocketState.OPEN);
         },
         onmessage: e => {
-          console.log("message!");
           console.log(e.data);
-          store.events.push(JSON.parse(e.data));
+          setLastMessage(JSON.parse(e.data));
+          // store.events.push(JSON.parse(e.data));
         },
-        onreconnect: e => console.log("Reconnecting...", e),
+        onreconnect: e => setSocketState(SocketState.RECONNECTING),
         onmaximum: e => console.log("Stop Attempting!", e),
-        onclose: e => console.log("Closed!", e),
+        onclose: e => setSocketState(SocketState.CLOSE),
         onerror: e => {
-          console.log("Error:", e);
+          setSocketState(SocketState.ERROR);
         }
       });
     }
     return () => {
-      console.log("closing");
       if (socket.current !== null) {
+        console.log("closing");
         socket.current.close();
       }
     };
-  }, [connection]);
-  return [connect, sendMessage];
+  }, [convertedUrl]);
+  return [sendMessage, lastMessage, socketState];
 };
-
-// socketConnect = (code: string) => {
-//
-// };
