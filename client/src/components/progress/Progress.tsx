@@ -1,9 +1,10 @@
 import React from "react";
 import "./Progress.css";
-import { useGlobalState } from "../../state/GameStore";
+import { GameStore } from "../../state/GameStore";
+import { useGlobal } from "reactn";
 
 export const Progress = () => {
-  const store = useGlobalState();
+  const [store, setStore] = useGlobal<GameStore>();
   const nomination =
     store.missions[store.round - 1].nominations[
       store.missions[store.round - 1].counter

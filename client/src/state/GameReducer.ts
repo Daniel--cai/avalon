@@ -1,42 +1,16 @@
 import { useContext, useEffect, useReducer } from "react";
 import EventStore from "../state/EventStore";
-import { useGlobalState, GameStore } from "../state/GameStore";
+import { GameStore } from "../state/GameStore";
 import { GameState } from "../model/GameState";
 import { Nomination } from "../model/Nomination";
 import { Message } from "../../../shared/contract";
 import { Mission } from "../model/Mission";
 
-export function eventReducer(state: GameStore, action: any) {
-  console.log("actionReducER!");
-  switch (action.type) {
-    case "SelectTeam":
-      return {
-        ...state,
-        state: GameState.Setup
-      };
-    case "VoteTeam":
-      return {
-        ...state,
-        state: GameState.Voting
-      };
-    case "CompleteTeam":
-      return {
-        ...state,
-        state: GameState.Mission
-      };
-    case "SelectMerlin":
-      return {
-        ...state,
-        state: GameState.Merlin
-      };
-    default: {
-      console.log("default");
-      return state;
-    }
-  }
-}
-
-export function actionReducer(state: GameStore, action: Message): GameStore {
+export const actionReducer = (
+  state: GameStore,
+  dispatch: any,
+  action: Message
+) => {
   console.log(action.type);
   console.log("actionReducer");
   switch (action.type) {
@@ -214,4 +188,4 @@ export function actionReducer(state: GameStore, action: Message): GameStore {
     default:
       return state;
   }
-}
+};

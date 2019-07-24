@@ -1,7 +1,8 @@
 import { useContext, useEffect, useReducer } from "react";
 import EventStore from "../state/EventStore";
-import { useGlobalState, GameStore } from "../state/GameStore";
+import { GameStore } from "../state/GameStore";
 import { GameState } from "../model/GameState";
+import { useGlobal } from "reactn";
 
 export function reducer(state: GameStore, action: any): GameStore {
   console.log("reducer");
@@ -148,19 +149,18 @@ export function reducer(state: GameStore, action: any): GameStore {
   }
 }
 
-export const useEventHandler = () => {
-  const eventStore = useContext(EventStore);
-  let gameStore = useGlobalState();
+// export const useEventHandler = () => {
+//   let [store, setStore] = useGlobal<GameStore>();
 
-  useEffect(() => {
-    if (eventStore.events.length === 0) return;
-    gameStore = reducer(
-      gameStore,
-      eventStore.events[eventStore.events.length - 1]
-    );
-    console.log("useEffect!");
-  }, [eventStore.events.length]);
-};
+//   useEffect(() => {
+//     if (store.events.length === 0) return;
+//     gameStore = reducer(
+//       gameStore,
+//       eventStore.events[eventStore.events.length - 1]
+//     );
+//     console.log("useEffect!");
+//   }, [store.events.length]);
+// };
 
 //       type: "PlayerConnected",
 //       player: string

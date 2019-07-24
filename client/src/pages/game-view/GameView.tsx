@@ -3,35 +3,33 @@ import { Lobby } from "../../lobby";
 import { GameScreen } from "../game-screen";
 import { RouteComponentProps } from "react-router";
 import React, { useState, useCallback } from "react";
+import { usePersistentStorage } from "../../hooks/usePersistentStorage";
 
-export const GameView = (
-  props: RouteComponentProps<{ code: string; name: string }>
-) => {
-  const [sendMessage, setWebsocketUrl] = useWebsocketHandler();
+export const GameView = (props: RouteComponentProps<{}>) => {
+  const [sendMessage, setWebsocketUrl, websocketState] = useWebsocketHandler();
+  const [{ name, code }, setCookie] = usePersistentStorage();
   const [inProgress, setInProgess] = useState(false);
   const startGame = useCallback(() => {
     setInProgess(true);
   }, []);
   const connect = useCallback(() => {
-    const url = `ws://localhost:3001?code=${props.match.params.code}&player=${
-      props.match.params.name
-    }`;
+    console.log(name);
+    if (name == "" || code == "") {
+      console.log("setting COokie");
+      props.history.push("/");
+    }
+    const url = `ws://localhost:3001?code=${code}&player=${name}`;
     setWebsocketUrl(url);
   }, []);
-  if (inProgress)
-    return (
-      <GameScreen
-        code={props.match.params.code}
-        name={props.match.params.name}
-      />
-    );
+  if (inProgress) return <GameScreen code={code} name={name} />;
   else
     return (
       <Lobby
         startGame={startGame}
         connect={connect}
-        code={props.match.params.code}
-        name={props.match.params.name}
+        code={code}
+        name={name}
+        socketState={websocketState}
       />
     );
 };

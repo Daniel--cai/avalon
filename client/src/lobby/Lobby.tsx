@@ -14,6 +14,8 @@ import EventStore from "../state/EventStore";
 import { observer } from "mobx-react-lite";
 import { Message } from "../../../shared/contract";
 import { any } from "prop-types";
+import { GameStore } from "../state/GameStore";
+import { useGlobal } from "reactn";
 interface Player {
   connectionId: string;
   name: string;
@@ -25,11 +27,12 @@ interface LobbyProps {
   connect: any;
   code: string;
   name: string;
+  socketState: SocketState;
 }
 
-export const Lobby = observer((props: LobbyProps) => {
+export const Lobby = (props: LobbyProps) => {
   const [players, setPlayers] = useState([] as Player[]);
-  const store = useContext(EventStore);
+  const [store, setStore] = useGlobal<GameStore>();
 
   useEffect(() => {
     props.connect();
@@ -39,6 +42,9 @@ export const Lobby = observer((props: LobbyProps) => {
     async function getPlayers() {
       const players = await Api.get(`/lobby/${props.code}/players`);
       setPlayers(players.data);
+      // if (players.data.length == 2) {
+      //   props.startGame();
+      // }
     }
     getPlayers();
   }, [store.events.length]);
@@ -78,4 +84,4 @@ export const Lobby = observer((props: LobbyProps) => {
       </button>
     </div>
   );
-});
+};

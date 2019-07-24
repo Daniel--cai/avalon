@@ -13,6 +13,8 @@ export const GameBoard = (props: Props) => {
       State: {props.game.state}
       <br />
       Counter: {props.game.missions[props.game.round - 1].counter}
+      <br />
+      Players: {props.game.players.length}
       <table className="u-full-width">
         <thead>
           <tr>

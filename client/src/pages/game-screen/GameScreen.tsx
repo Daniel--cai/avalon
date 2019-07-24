@@ -1,25 +1,73 @@
 import React, { useEffect, useContext } from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
 import Api from "../../framework/api";
 import { Game } from "../../model/Game";
 
-import { useGlobalState, Provider } from "../../state/GameStore";
-import { observer } from "mobx-react-lite";
 import { VoteTeam, Setup, CompleteMission } from "../../components/actions";
 import { PlayerSwitcher } from "../../components/test-helpers";
-import { Header } from "../../components/header";
-import { Loading } from "../../components/loading";
 import { Progress } from "../../components/progress";
 
-import { useWebsocket } from "../../hooks/useWebsocket";
-import { useActionHandler } from "../../hooks/useActionHandler";
-import { EventHelper } from "../event-helper";
 import { PlayerList } from "../../components/player-list";
 import { GameState } from "../../model/GameState";
 import { GameBoard } from "../../components/game-board";
-const ActionInformation = observer((props: {}) => {
-  const store = useGlobalState();
-  useActionHandler();
+import { useGlobal } from "reactn";
+import { GameStore } from "../../state/GameStore";
+
+interface GameScreenProps {
+  code: string;
+  name: string;
+}
+
+export const GameScreen = (props: GameScreenProps) => {
+  const [store, setStore] = useGlobal<GameStore>();
+  console.log(store);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await Api.get(`/game/${props.code}`);
+        console.log(response.data);
+        const game: Game = response.data;
+        setStore({
+          ...game,
+          code: props.code,
+          player: props.name,
+          loaded: true
+        });
+        // setLoaded(true);
+        // console.log(store.loaded);
+      } catch (ex) {
+        console.log(ex);
+        //store.loaded = false;
+      }
+    }
+    fetchData();
+  }, []);
+  console.log(store.loaded);
+  if (!store.loaded) return <div>Loading...</div>;
+  return (
+    <div>
+      <GameBoard
+        game={{
+          missions: store.missions,
+          state: store.state,
+          players: store.players,
+          round: store.round
+        }}
+      />
+      {store.players.length}
+      <PlayerSwitcher players={store.players.map(player => player.name)} />
+      <p>State: {store.state}</p>
+      {store.state == GameState.Voting && <Progress />}
+      <ActionInformation />
+      <br />
+      {store.state == GameState.Voting && <VoteTeam />}
+      {store.state == GameState.Setup && <PlayerList />}
+      {store.state == GameState.Mission && <CompleteMission />}
+    </div>
+  );
+};
+
+const ActionInformation = (props: {}) => {
+  const [store, setStore] = useGlobal<GameStore>();
   // useWebsocket(store.code, store.player);
   let message = "";
   const currentMission = store.missions[store.round - 1];
@@ -41,53 +89,4 @@ const ActionInformation = observer((props: {}) => {
       break;
   }
   return <div className="subtitle">{message}</div>;
-});
-
-interface GameScreenProps {
-  code: string;
-  name: string;
-}
-
-export const GameScreen = observer((props: GameScreenProps) => {
-  const store = useGlobalState();
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        store.code = "";
-        const response = await Api.get(`/game/${props.code}`);
-        console.log(response);
-        const game: Game = response.data;
-        store.missions = game.missions;
-        store.state = game.state;
-        store.code = props.code;
-        store.loaded = true;
-        store.round = game.round;
-        store.players = game.players;
-      } catch (ex) {
-        store.loaded = false;
-      }
-    }
-    fetchData();
-  }, []);
-  if (!store.loaded) return <div>Loading...</div>;
-  return (
-    <div>
-      <GameBoard
-        game={{
-          missions: store.missions,
-          state: store.state,
-          players: store.players,
-          round: store.round
-        }}
-      />
-      <PlayerSwitcher players={store.players.map(player => player.name)} />
-      <p>State: {store.state}</p>
-      {store.state == GameState.Voting && <Progress />}
-      <ActionInformation />
-      <br />
-      {store.state == GameState.Voting && <VoteTeam />}
-      {store.state == GameState.Setup && <PlayerList />}
-      {store.state == GameState.Mission && <CompleteMission />}
-    </div>
-  );
-});
+};

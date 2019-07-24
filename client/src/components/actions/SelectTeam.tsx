@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useGlobalState } from "../../state/GameStore";
-import { observer } from "mobx-react-lite";
 import { Checkbox } from "../checkbox";
 import { Setup } from ".";
+import { useGlobal } from "reactn";
+import { GameStore } from "../../state/GameStore";
 
 interface ReceiveVoteCommand {
   code: string;
@@ -11,7 +11,7 @@ interface ReceiveVoteCommand {
 }
 
 export const SelectTeam = () => {
-  const store = useGlobalState();
+  const [store, setStore] = useGlobal<GameStore>();
 
   const [selected, setSelected] = useState<string[]>([]);
 

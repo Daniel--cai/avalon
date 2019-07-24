@@ -1,17 +1,17 @@
 import { useContext, useEffect, useReducer } from "react";
 import EventStore from "../state/EventStore";
-import { GameStore as GameStoreModel, useDispatch } from "../state/GameStore";
+import { GameStore as GameStoreModel } from "../state/GameStore";
 import { GameState } from "../model/GameState";
 
-export const useActionHandler = () => {
-  const eventStore = useContext(EventStore);
-  // const gameStore = useGlobalState();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (eventStore.events.length === 0) return;
-    dispatch(eventStore.events[eventStore.events.length - 1]);
-  }, [eventStore.events.length]);
-};
+// export const useActionHandler = () => {
+//   const eventStore = useContext(EventStore);
+//   // const gameStore = useGlobalState();
+//   const dispatch = useDispatch();
+//   useEffect(() => {
+//     if (eventStore.events.length === 0) return;
+//     dispatch(eventStore.events[eventStore.events.length - 1]);
+//   }, [eventStore.events.length]);
+// };
 
 //       type: "PlayerConnected",
 //       player: string

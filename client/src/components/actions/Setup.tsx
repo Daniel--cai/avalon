@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import Api from "../../framework/api";
-import { useGlobalState } from "../../state/GameStore";
 import { observer } from "mobx-react-lite";
 import { SubmitTeamCommand } from "../../../../shared/contract";
+import { useGlobal } from "reactn";
+import { GameStore } from "../../state/GameStore";
 
 export const Setup = observer((props: { selected: string[] }) => {
-  const store = useGlobalState();
+  const [store, setStore] = useGlobal<GameStore>();
 
   let array: string[] = [];
 

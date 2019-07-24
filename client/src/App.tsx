@@ -7,26 +7,19 @@ import { GameView } from "./pages/game-view";
 import { EventHelper } from "./pages/event-helper";
 import "./App.css";
 import { Header } from "./components/header";
-import { Provider } from "./state/GameStore";
 
 export const App = () => {
   return (
     <Router>
       <div className="app ">
-        <Provider>
-          <Header />
-          <div className="container">
-            <div className="row">
-              <Route exact path="/" component={Signup} />
-              <Route
-                exact
-                path="/lobby/:code/name/:name"
-                component={GameView}
-              />
-              <Route exact path="/test" component={EventHelper} />
-            </div>
+        <Header />
+        <div className="container">
+          <div className="row">
+            <Route exact path="/" component={Signup} />
+            <Route exact path="/lobby" component={GameView} />
+            <Route exact path="/test" component={EventHelper} />
           </div>
-        </Provider>
+        </div>
       </div>
     </Router>
   );

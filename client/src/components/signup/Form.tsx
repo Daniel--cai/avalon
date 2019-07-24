@@ -5,6 +5,7 @@ import Sockette from "sockette";
 import Api from "../../framework/api";
 import "./Form.css";
 import { useWebsocket } from "../../hooks/useWebsocket";
+import { usePersistentStorage } from "../../hooks/usePersistentStorage";
 
 interface State {
   name: string;
@@ -18,7 +19,7 @@ const FormBase = (props: Props & RouteComponentProps) => {
   const [name, setName] = useState("");
   let [code, setCode] = useState("");
   let [error, setError] = useState("");
-
+  const [{ cookieName, cookieCode }, setCookie] = usePersistentStorage();
   async function handleCreate() {
     const data = {};
     const response = await Api.Post("/lobby", data);
@@ -35,11 +36,11 @@ const FormBase = (props: Props & RouteComponentProps) => {
       // await this.socketConnect(code);
       // const response = await Api.Post("/lobby/join", data);
       // const code = response.data;
-      props.history.push(`/lobby/${code}/name/${name}`);
+      setCookie(name, code);
+      props.history.push(`/lobby`);
       // const connectionId = response.data;
     } catch (error) {
       console.log(error);
-      debugger;
       setError(error.response);
     }
   }
