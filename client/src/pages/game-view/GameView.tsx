@@ -8,9 +8,9 @@ import { usePersistentStorage } from "../../hooks/usePersistentStorage";
 export const GameView = (props: RouteComponentProps<{}>) => {
   const [sendMessage, setWebsocketUrl, websocketState] = useWebsocketHandler();
   const [{ name, code }, setCookie] = usePersistentStorage();
-  const [inProgress, setInProgess] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
   const startGame = useCallback(() => {
-    setInProgess(true);
+    setInProgress(true);
   }, []);
   const connect = useCallback(() => {
     console.log(name);

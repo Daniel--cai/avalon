@@ -71,10 +71,18 @@ export class LobbyCommand extends Command {
     console.log("listing connectionIds");
     console.log(connectionIds);
     console.log("publihsing first message");
+    console.log("checking: lobby.game.state2");
 
-    await this.notifier.publish({
-      data: { type: "PlayerConnected", player },
-      connectionId: connectionIds
-    });
+    if (lobby.game.state === GameState.Lobby) {
+      await this.notifier.publish({
+        data: { type: "PlayerConnected", player },
+        connectionId: connectionIds
+      });
+    } else {
+      await this.notifier.publish({
+        data: { type: "GameStarted", data: lobby.game },
+        connectionId: [connectionId]
+      });
+    }
   }
 }

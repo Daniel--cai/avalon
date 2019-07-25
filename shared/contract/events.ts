@@ -1,4 +1,10 @@
+import { Game } from "../../client/src/model/Game";
+
 export type Event =
+  | {
+      type: "GameStarted";
+      game: Game;
+    }
   | {
       type: "PlayerConnected";
       player: string;

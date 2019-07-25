@@ -33,8 +33,8 @@ interface LobbyProps {
 export const Lobby = (props: LobbyProps) => {
   const [players, setPlayers] = useState([] as Player[]);
   const [store, setStore] = useGlobal<GameStore>();
-
   useEffect(() => {
+    console.log("connecting..");
     props.connect();
   }, []);
 
@@ -42,11 +42,17 @@ export const Lobby = (props: LobbyProps) => {
     async function getPlayers() {
       const players = await Api.get(`/lobby/${props.code}/players`);
       setPlayers(players.data);
-      // if (players.data.length == 2) {
-      //   props.startGame();
-      // }
     }
-    getPlayers();
+
+    const lastEvent = store.events.slice(-1).pop();
+    let game: Game;
+    if (lastEvent != undefined) {
+      if (lastEvent.type == "PlayerConnected") {
+        getPlayers();
+      } else if (lastEvent.type == "GameStarted") {
+        props.startGame();
+      }
+    }
   }, [store.events.length]);
 
   const startGame = useCallback(async () => {
