@@ -5,11 +5,12 @@ import { GameState } from "../model/GameState";
 import { Nomination } from "../model/Nomination";
 import { Message } from "../../../shared/contract";
 import { Mission } from "../model/Mission";
-
+import { Event } from "../../../shared/contract/events";
+import { Action } from "../../../shared/contract/actions";
 export const actionReducer = (
   state: GameStore,
   dispatch: any,
-  action: Message
+  action: Event | Action
 ) => {
   console.log(action.type);
   console.log("actionReducer");
@@ -95,28 +96,55 @@ export const actionReducer = (
           };
         })
       };
-
-    case "TeamAccepted":
+    case "TeamComplete":
       if (state.state !== GameState.Voting) return state;
-      return {
-        ...state,
-        state: GameState.Mission
-      };
-    case "TeamRejected":
-      if (state.state !== GameState.Voting) return state;
-      return {
-        ...state,
-        state: GameState.Setup,
-        missions: state.missions.map((mission, index) => {
-          if (index !== state.round - 1) return mission;
-          debugger;
-          return {
-            ...mission,
-            counter: mission.counter + 1
-          };
-        })
-      };
+      if (action.success)
+        return {
+          ...state,
+          state: GameState.Mission
+        };
+      else
+        return {
+          ...state,
+          state: GameState.Setup,
+          missions: state.missions.map((mission, index) => {
+            if (index !== state.round - 1) return mission;
+            debugger;
+            return {
+              ...mission,
+              counter: mission.counter + 1
+            };
+          })
+        };
 
+    case "MissionComplete":
+      if (state.state !== GameState.Mission) return state;
+      if (action.success)
+        return {
+          ...state,
+          state: GameState.Setup,
+          round: state.round + 1,
+          missions: state.missions.map((mission, index) => {
+            if (index !== state.round - 1) return mission;
+            return {
+              ...mission,
+              success: true
+            };
+          })
+        };
+      else
+        return {
+          ...state,
+          state: GameState.Setup,
+          round: state.round + 1,
+          missions: state.missions.map((mission, index) => {
+            if (index !== state.round - 1) return mission;
+            return {
+              ...mission,
+              success: false
+            };
+          })
+        };
     case "MissionSubmitted":
       if (state.state !== GameState.Mission) {
         alert("MissionSubmitted rejected. state:Mission !=  " + state.state);
@@ -136,55 +164,6 @@ export const actionReducer = (
         })
       };
 
-    case "MissionSucceeded":
-      if (state.state !== GameState.Mission) return state;
-      return {
-        ...state,
-        state: GameState.Setup,
-        round: state.round + 1,
-        missions: state.missions.map((mission, index) => {
-          if (index !== state.round - 1) return mission;
-          return {
-            ...mission,
-            success: true
-          };
-        })
-      };
-
-    case "MissionFailed":
-      if (state.state !== GameState.Mission) return state;
-      return {
-        ...state,
-        state: GameState.Setup,
-        round: state.round + 1,
-        missions: state.missions.map((mission, index) => {
-          if (index !== state.round - 1) return mission;
-          return {
-            ...mission,
-            success: false
-          };
-        })
-      };
-    // case "MerlinFound":
-    //   return {
-    //     ...state,
-    //     selected: string,
-    //     merlin: string,
-    //     player: string
-    //   };
-
-    // case "MerlinNotFound":
-    //   return {
-    //     ...state,
-    //     selected: string,
-    //     merlin: string,
-    //     player: string
-    //   };
-    case "SetPlayer":
-      return {
-        ...state,
-        player: action.player
-      };
     default:
       return state;
   }

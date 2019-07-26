@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Api from "../../framework/api";
 
-import { observer } from "mobx-react-lite";
 import { SubmitMissionCommand } from "../../../../shared/contract";
 import { GameStore } from "../../state/GameStore";
 import { useGlobal } from "reactn";
 
-export const CompleteMission = observer(() => {
+export const CompleteMission = () => {
   const [store, setStore] = useGlobal<GameStore>();
   const [disabled, setDisabled] = useState<{ [key: string]: string }>({});
   const sendMission = (success: boolean) => async () => {
@@ -24,7 +23,7 @@ export const CompleteMission = observer(() => {
     console.log(response);
   };
 
-  const mission = store.missions[store.round - 1];
+  const mission = store.missions[store.round];
 
   const nomination = mission.nominations[mission.counter];
 
@@ -59,4 +58,4 @@ export const CompleteMission = observer(() => {
       </button>
     </>
   );
-});
+};

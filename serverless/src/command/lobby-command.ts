@@ -1,6 +1,4 @@
-import { LobbyRepository } from "../shared/client";
 import { Lobby } from "../schema/lobby";
-import * as moment from "moment";
 import { Player } from "../model/player";
 import { GameState } from "../model/state";
 import { InvalidOperation } from "../lib/error/invalid-operation";
@@ -52,13 +50,35 @@ export class LobbyCommand extends Command {
       playerModel.name = player;
       playerModel.number = lobby.getNumberOfPlayers();
       playerModel.connectionId = connectionId;
+
+      const p2 = new Player();
+      const p3 = new Player();
+      const p4 = new Player();
+      const p5 = new Player();
+
+      p2.name = "2";
+      p2.number = 2;
+      p2.connectionId = connectionId;
+      p3.name = "3";
+      p3.number = 3;
+      p3.connectionId = connectionId;
+      p4.name = "4";
+      p4.number = 4;
+      p4.connectionId = connectionId;
+      p5.name = "5";
+      p5.number = 5;
+      p5.connectionId = connectionId;
       lobby.players.push(playerModel);
+      lobby.players.push(p2);
+      lobby.players.push(p3);
+      lobby.players.push(p4);
+      lobby.players.push(p5);
     } else {
       console.log("existing player", player);
       exist.connectionId = connectionId;
     }
 
-    const connectionIds = lobby.players.map(player => player.connectionId);
+    let connectionIds = lobby.players.map(player => player.connectionId);
 
     // const message: LobbyJoinMessage = {
     //   type: "LobbyJoinMessage",
@@ -73,6 +93,8 @@ export class LobbyCommand extends Command {
     console.log("publihsing first message");
     console.log("checking: lobby.game.state2");
 
+    //notify other players
+
     if (lobby.game.state === GameState.Lobby) {
       await this.notifier.publish({
         data: { type: "PlayerConnected", player },
@@ -80,7 +102,7 @@ export class LobbyCommand extends Command {
       });
     } else {
       await this.notifier.publish({
-        data: { type: "GameStarted", data: lobby.game },
+        data: { type: "GameStarted", game: lobby.game },
         connectionId: [connectionId]
       });
     }

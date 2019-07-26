@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import Api from "../../framework/api";
 import { Game } from "../../model/Game";
 
@@ -9,7 +9,7 @@ import { Progress } from "../../components/progress";
 import { PlayerList } from "../../components/player-list";
 import { GameState } from "../../model/GameState";
 import { GameBoard } from "../../components/game-board";
-import { useGlobal } from "reactn";
+import { useGlobal, setGlobal } from "reactn";
 import { GameStore } from "../../state/GameStore";
 
 interface GameScreenProps {
@@ -19,21 +19,22 @@ interface GameScreenProps {
 
 export const GameScreen = (props: GameScreenProps) => {
   const [store, setStore] = useGlobal<GameStore>();
-  console.log(store);
+  console.log("GameScreen rerenedered");
+  console.log(props.code);
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await Api.get(`/game/${props.code}`);
         console.log(response.data);
         const game: Game = response.data;
-        setStore({
+        setGlobal(s => ({
           ...game,
           code: props.code,
           player: props.name,
           loaded: true
-        });
+        }));
         // setLoaded(true);
-        // console.log(store.loaded);
+        console.log(store.player);
       } catch (ex) {
         console.log(ex);
         //store.loaded = false;
@@ -41,10 +42,10 @@ export const GameScreen = (props: GameScreenProps) => {
     }
     fetchData();
   }, []);
-  console.log(store.loaded);
   if (!store.loaded) return <div>Loading...</div>;
   return (
     <div>
+      <p>player: {store.player}</p>
       <GameBoard
         game={{
           missions: store.missions,
@@ -53,7 +54,7 @@ export const GameScreen = (props: GameScreenProps) => {
           round: store.round
         }}
       />
-      {store.players.length}
+
       <PlayerSwitcher players={store.players.map(player => player.name)} />
       <p>State: {store.state}</p>
       {store.state == GameState.Voting && <Progress />}
@@ -70,7 +71,7 @@ const ActionInformation = (props: {}) => {
   const [store, setStore] = useGlobal<GameStore>();
   // useWebsocket(store.code, store.player);
   let message = "";
-  const currentMission = store.missions[store.round - 1];
+  const currentMission = store.missions[store.round];
   const currentRound = currentMission.nominations[currentMission.counter];
   switch (store.state) {
     case "setup":

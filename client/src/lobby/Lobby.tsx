@@ -11,7 +11,6 @@ import { Game } from "../model/Game";
 import queryString from "query-string";
 import { useWebsocket, SocketState } from "../hooks/useWebsocket";
 import EventStore from "../state/EventStore";
-import { observer } from "mobx-react-lite";
 import { Message } from "../../../shared/contract";
 import { any } from "prop-types";
 import { GameStore } from "../state/GameStore";

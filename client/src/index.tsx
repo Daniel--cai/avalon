@@ -9,6 +9,8 @@ import { GameStore } from "./state/GameStore";
 import { setGlobal } from "reactn";
 
 const initialState = new GameStore();
+console.log("new");
+console.log(initialState);
 setGlobal(initialState);
 
 ReactDOM.render(<App />, document.getElementById("root"));

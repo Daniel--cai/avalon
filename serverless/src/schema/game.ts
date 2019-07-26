@@ -34,11 +34,16 @@ export class Game {
     ];
     this.state = GameState.Lobby;
     this.players = [];
-    this.round = 1;
+    this.round = 0;
     this.events = [];
   }
-
+  GetPreviousMission() {
+    return this.missions[Math.max(this.GetRound() - 1, 0)];
+  }
   GetCurrentMission() {
-    return this.missions[this.round - 1];
+    return this.missions[this.GetRound()];
+  }
+  GetRound() {
+    return this.round;
   }
 }

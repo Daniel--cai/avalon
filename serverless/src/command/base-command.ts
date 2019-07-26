@@ -1,5 +1,8 @@
 import { LobbyRepository } from "../shared/client";
-import { NotifyService } from "../lib/notification/notify-service";
+import {
+  Notification,
+  NotifyService
+} from "../lib/notification/notify-service";
 import { AWS } from "serverless-offline";
 
 export abstract class Command {

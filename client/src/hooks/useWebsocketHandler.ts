@@ -2,7 +2,7 @@ import { useEffect, useContext, useState } from "react";
 import EventStore from "../state/EventStore";
 import { useWebsocket } from "./useWebsocket";
 import { GameStore } from "../state/GameStore";
-import { useGlobal } from "reactn";
+import { useGlobal, setGlobal } from "reactn";
 
 export const useWebsocketHandler = () => {
   const [websocketUrl, setWebsocketUrl] = useState("");
@@ -10,8 +10,7 @@ export const useWebsocketHandler = () => {
   const [store, setStore] = useGlobal<GameStore>();
   useEffect(() => {
     if (lastMessage !== null) {
-      setStore({
-        ...store,
+      setGlobal({
         events: store.events.concat(lastMessage)
       });
     }

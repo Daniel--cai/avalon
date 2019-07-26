@@ -6,8 +6,8 @@ import { useGlobal } from "reactn";
 export const Progress = () => {
   const [store, setStore] = useGlobal<GameStore>();
   const nomination =
-    store.missions[store.round - 1].nominations[
-      store.missions[store.round - 1].counter
+    store.missions[store.round].nominations[
+      store.missions[store.round].counter
     ];
   return (
     <div className="progress">

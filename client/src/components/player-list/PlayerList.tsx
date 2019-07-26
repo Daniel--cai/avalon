@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import { GameStore } from "../../state/GameStore";
-import { observer } from "mobx-react-lite";
 import { Checkbox } from "../checkbox";
 import { Setup } from "../actions";
 
@@ -13,9 +12,10 @@ interface ReceiveVoteCommand {
   success: boolean;
 }
 
-export const PlayerList = observer(() => {
+export const PlayerList = () => {
+  console.log("PlayerList rerendered");
   const [store, setStore] = useGlobal<GameStore>();
-
+  console.log(store.player);
   let array: string[] = [];
   const [selected, setSelected] = useState(array);
 
@@ -29,7 +29,7 @@ export const PlayerList = observer(() => {
     setSelected(updated);
   };
 
-  const mission = store.missions[store.round - 1];
+  const mission = store.missions[store.round];
   const nominator = mission.nominations[mission.counter].nominator;
 
   if (store.player != nominator)
@@ -48,7 +48,7 @@ export const PlayerList = observer(() => {
                 checked={selected.includes(player.name)}
                 onChange={handleSelectOption}
                 disabled={
-                  selected.length >= store.missions[store.round - 1].quantity &&
+                  selected.length >= store.missions[store.round].quantity &&
                   !selected.includes(player.name)
                 }
                 label={player.name}
@@ -60,4 +60,4 @@ export const PlayerList = observer(() => {
       <Setup selected={selected} />
     </>
   );
-});
+};

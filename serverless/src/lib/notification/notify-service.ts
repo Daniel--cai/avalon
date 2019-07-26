@@ -2,9 +2,11 @@
 // import * as AWS from "serverless-offline";
 const API = require("serverless-offline").AWS;
 import axios from "axios";
+import { Event } from "../../../../shared/contract/events";
+
 export interface Notification {
   connectionId: string[];
-  data: object;
+  data: Event;
 }
 
 export class NotifyService {

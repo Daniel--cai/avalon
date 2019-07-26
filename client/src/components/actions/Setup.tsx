@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
 import Api from "../../framework/api";
-import { observer } from "mobx-react-lite";
 import { SubmitTeamCommand } from "../../../../shared/contract";
 import { useGlobal } from "reactn";
 import { GameStore } from "../../state/GameStore";
 
-export const Setup = observer((props: { selected: string[] }) => {
+export const Setup = (props: { selected: string[] }) => {
   const [store, setStore] = useGlobal<GameStore>();
 
   let array: string[] = [];
@@ -27,11 +26,11 @@ export const Setup = observer((props: { selected: string[] }) => {
         className="u-full-width button-primary"
         onClick={handleNewNomination}
         disabled={
-          props.selected.length !== store.missions[store.round - 1].quantity
+          props.selected.length !== store.missions[store.round].quantity
         }
       >
         Setup
       </button>
     </>
   );
-});
+};

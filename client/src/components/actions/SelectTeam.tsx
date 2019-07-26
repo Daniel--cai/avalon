@@ -37,8 +37,7 @@ export const SelectTeam = () => {
                     checked={selected.includes(player.name)}
                     onChange={handleSelectOption}
                     disabled={
-                      selected.length >=
-                        store.missions[store.round - 1].quantity &&
+                      selected.length >= store.missions[store.round].quantity &&
                       !selected.includes(player.name)
                     }
                     label={player.name}

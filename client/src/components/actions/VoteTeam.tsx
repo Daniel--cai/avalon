@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Api from "../../framework/api";
-import { observer } from "mobx-react-lite";
 import { GameStore } from "../../state/GameStore";
 import { useGlobal } from "reactn";
 
@@ -10,7 +9,7 @@ interface ReceiveVoteCommand {
   success: boolean;
 }
 
-export const VoteTeam = observer(() => {
+export const VoteTeam = () => {
   const [store, setStore] = useGlobal<GameStore>();
 
   const [disabled, setDisabled] = useState<{ [key: string]: string }>({});
@@ -50,4 +49,4 @@ export const VoteTeam = observer(() => {
       </button>
     </>
   );
-});
+};

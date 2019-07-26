@@ -1,15 +1,12 @@
-import { LobbyRepository } from "../shared/client";
 import { GameState } from "../model/state";
 import { InvalidOperation } from "../lib/error/invalid-operation";
 import { GameStateMachine } from "../state-machine";
-import { Game } from "../schema/game";
 import { SubmitTeamCommand } from "../../../shared/contract";
+import { Command } from "./base-command";
 
-export class SetupCommand {
-  private client: LobbyRepository;
-  public lobby: Game;
+export class SetupCommand extends Command {
   constructor() {
-    this.client = new LobbyRepository();
+    super();
   }
 
   async submitTeam(command: SubmitTeamCommand) {
@@ -40,5 +37,16 @@ export class SetupCommand {
     state.voteQuest();
 
     await this.client.update(lobby);
+    if (lobby.game.state !== GameState.Setup) {
+      let connectionIds = lobby.players.map(player => player.connectionId);
+      await this.notifier.publish({
+        data: {
+          type: "TeamSelected",
+          player: command.player,
+          players: command.players
+        },
+        connectionId: connectionIds
+      });
+    }
   }
 }

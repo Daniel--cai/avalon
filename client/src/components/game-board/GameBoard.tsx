@@ -6,13 +6,14 @@ interface Props {
 }
 
 export const GameBoard = (props: Props) => {
+  console.log("game board rerendered");
   return (
     <>
       Round: {props.game.round}
       <br />
       State: {props.game.state}
       <br />
-      Counter: {props.game.missions[props.game.round - 1].counter}
+      Counter: {props.game.missions[props.game.round].counter}
       <br />
       Players: {props.game.players.length}
       <table className="u-full-width">

@@ -1,15 +1,13 @@
-import { LobbyRepository } from "../shared/client";
 import { Vote } from "../schema/vote";
 import { GameState } from "../model/state";
 import { InvalidOperation } from "../lib/error/invalid-operation";
 import { GameStateMachine } from "../state-machine";
 import { SubmitVoteCommand } from "../../../shared/contract";
+import { Command } from "./base-command";
 
-export class VoteCommand {
-  private client: LobbyRepository;
-
+export class VoteCommand extends Command {
   constructor() {
-    this.client = new LobbyRepository();
+    super();
   }
 
   async submitVote(command: SubmitVoteCommand) {
@@ -29,5 +27,28 @@ export class VoteCommand {
     state.voteCommand();
 
     await this.client.update(lobby);
+
+    let connectionIds = lobby.players.map(player => player.connectionId);
+    if (lobby.game.state === GameState.Mission.toString()) {
+      await this.notifier.publish({
+        data: {
+          type: "TeamComplete",
+          players: lobby.game.GetCurrentMission().GetCurrentNomination()
+            .nominees,
+          success: true
+        },
+        connectionId: connectionIds
+      });
+    } else if (lobby.game.state === GameState.Setup.toString()) {
+      await this.notifier.publish({
+        data: {
+          type: "TeamComplete",
+          players: lobby.game.GetCurrentMission().GetCurrentNomination()
+            .nominees,
+          success: false
+        },
+        connectionId: connectionIds
+      });
+    }
   }
 }

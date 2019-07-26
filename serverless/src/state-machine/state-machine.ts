@@ -9,7 +9,7 @@ export interface FiniteStateMachine {
   startGame: () => void;
   voteQuest: () => void;
   finishGame: () => void;
-  voteCommand: (command: any) => void;
+  voteCommand: (command: any) => any;
   missionCommand: (command: any) => void;
   getGameData: () => Game;
 }
