@@ -10,7 +10,7 @@
     "@types/socket.io-client": "^1.4.32",
     "@types/ws": "^6.0.1",
     "aws-sdk": "^2.480.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "js-cookie": "^2.2.0",
     "mobx": "^5.9.0",
     "mobx-react-lite": "^1.1.1",
