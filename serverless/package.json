@@ -32,7 +32,7 @@
     "aws-sdk": "^2.401.0",
     "axios": "^0.19.0",
     "middy": "^0.23.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "serverless-dynamodb-local": "^0.2.30",
     "uuid": "^3.3.2",
     "xstate": "^4.3.3"
